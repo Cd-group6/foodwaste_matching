@@ -1,118 +1,96 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React from "react";
+import { useState,useEffect} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+    TextInput,
+    ScrollView,
+    Alert,
+    StatusBar
+    } from 'react-native';
+import {theme} from "./colors.js";
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+export default function App() {
+    const[chatting, setChatting]=useState(true);
+    const[text, setText]=useState("");
+    const[toDos,setToDos]=useState({});
+    const match = ()=>setChatting(false);
+    const chat = ()=>setChatting(true);
+    const onChangeText=(payload)=>setText(payload);
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step one">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+    return (
+        <View style={styles.container}>
+            <StatusBar style="auto" />
+            <TextInput
+                onChangeText={onChangeText}
+                returnKeyType='done'
+                value={text}
+                placeholder={chatting ? "  Search Chat": "  Search Match"}
+                style={styles.search}
+            />
+            <View style={styles.header}>
+                <TouchableOpacity onPress={chat}>
+                    <Text style={{...styles.btnText, color:chatting ? theme.mainC:theme.grey}}>채팅</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={match}>
+                    <Text style={{...styles.btnText, color:!chatting ? theme.mainC:theme.grey}}>매칭</Text>
+                </TouchableOpacity>
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={styles.room}>
+                    <Text style={styles.chat}> asdf </Text>
+                </View>
+                <View style={styles.chat}></View>
+                <View style={styles.chat}></View>
+            </ScrollView>
         </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+    );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+    container: {
+        flex: 1,
+        backgroundColor: theme.bg,
+        paddingHorizontal:20,
 
-export default App;
+    },
+    header:{
+        justifyContent:"space-between",
+        paddingHorizontal:55,
+        flexDirection: "row",
+        marginTop:27,
+
+    },
+    btnText:{
+        fontSize:25,
+        fontWeight:"500",
+    },
+    search:{
+        backgroundColor:"#F1F1F1",
+        paddingVertical:15,
+        paddingHorizontal: 20,
+        borderRadius:30,
+        marginVertical:20,
+        marginTop:45,
+        fontSize:18,
+    },
+    room:{
+        backgroundColor:theme.chatBg,
+        borderWidth:2,
+        borderColor:theme.mainC,
+        marginTop:30,
+        paddingVertical:20,
+        paddingHorizontal:20,
+        borderRadius:10,
+        flexDirection:"row",
+        alignItems:"center",
+    },
+    chat:{
+            backgroundColor:"white",
+            paddingVertical:10,
+            paddingHorizontal:20,
+            alignItems:"center",
+        },
+});
