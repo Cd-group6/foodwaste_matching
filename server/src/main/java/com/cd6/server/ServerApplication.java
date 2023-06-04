@@ -58,6 +58,12 @@ public class ServerApplication{
                     )
                     .csrf(c -> c
                             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                    )
+                    .oauth2Login(o -> o
+                            .failureHandler((request, response, exception) -> {
+                                request.getSession().setAttribute("error.message", exception.getMessage());
+                                handler.onAuthenticationFailure(request, response, exception);
+                            })
                     );
 
 
