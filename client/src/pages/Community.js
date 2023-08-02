@@ -17,10 +17,9 @@ import React from "react";
               <View style={styles.container}>
                   <StatusBar style="auto" />
                   <Search />
-                  <Header />
                   <ScrollView showsVerticalScrollIndicator={false}>
-                      <View style={styles.room}>
-                          <Text style={styles.chat}> asdf </Text>
+                      <View style={styles.story}>
+                          <Text style={styles.post}> 게시판_준비중 </Text>
                       </View>
                       <View style={styles.chat}></View>
                       <View style={styles.chat}></View>
@@ -36,7 +35,7 @@ import React from "react";
                  paddingHorizontal:20,
 
              },
-             room:{
+             story:{
                  backgroundColor:theme.chatBg,
                  borderWidth:2,
                  borderColor:theme.mainC,
@@ -47,10 +46,11 @@ import React from "react";
                  flexDirection:"row",
                  alignItems:"center",
              },
-             chat:{
+             post:{
                      backgroundColor:"white",
                      paddingVertical:10,
                      paddingHorizontal:20,
                      alignItems:"center",
+                     color:"black",
                  },
          });
