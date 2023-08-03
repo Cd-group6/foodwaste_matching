@@ -1,11 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
+/*import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -114,5 +107,35 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+
+export default App;
+*/
+import * as React from 'react';
+import {Button, View, Text, ScrollView} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import Login from "./src/pages/Login"
+import First from "./src/pages/First"
+
+
+
+const Stack = createStackNavigator();
+
+function App() {
+    return (
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen
+                    name="First"
+                    component={First}
+                    options={{headerShown: false}}/>
+                <Stack.Screen
+                    name="Login"
+                    component={Login}
+                    options={{title: ''}}/>
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
+}
 
 export default App;

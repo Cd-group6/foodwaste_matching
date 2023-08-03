@@ -81,11 +81,11 @@ function FirstScreen({navigation}){
                     실시간 매칭 음식물 쓰레기 처리 공유 플랫폼
                 </Text>
                 <Image style={styles.simg} source={Simg} />
-                <View style={styles.button}>
-                    <Button
-                        title="시 작"
-                        color="#D0747D"
-                        onPress={() => navigation.navigate('Login')}/>
+                <View style={styles.btnArea}>
+                    <TouchableOpacity style={styles.btn}
+                        onPress={() => navigation.navigate('Login')}>
+                      <Text style={styles.btnText}>시작</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </ScrollView>
@@ -113,11 +113,23 @@ const styles = StyleSheet.create({
           width:300,
           resizeMode: 'contain',
        },
-       button: {
+       btnArea: {
           marginTop:-200,
           width:200,
        },
-
+       btn: {
+         width: 200,
+         height:40,
+         borderRadius: 5,
+         justifyContent: 'center',
+         alignItems: 'center',
+         backgroundColor: theme.mainC,
+       },
+       btnText: {
+         color: 'white',
+         justifyContent: 'center',
+         alignItems: 'center',
+       },
    });
 
 export default FirstScreen
