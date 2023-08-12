@@ -2,11 +2,64 @@ import * as React from 'react';
 import {Button, View, Text, ScrollView} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
 import Login from "./src/auth/Login"
 import First from "./src/auth/First"
-{/*import Register from "./src/auth/Register"*/}
+import Register from "./src/auth/Register"
+import Home from "./src/pages/Home"
+import Setting from "./src/pages/Setting"
+import Community from "./src/pages/Community"
+
+import {theme} from "./src/colors.js";
+import IconM from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+const MainTab = ({navigation, route}) => {
+    return(
+        <Tab.Navigator
+            initialRouteName="Home"
+            screenOptions={{
+                tabBarActiveTintColor: theme.mainC,
+                tabBarInactiveTintColor: theme.grey,
+                headerShown: false,
+            }}>
+            <Tab.Screen
+                name="Home"
+                component={Home}
+                options={{
+                    title: 'Home',
+                    tabBarIcon: ({color, size}) => (
+                        <Icon name="home" color={color} size={size} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Community"
+                component={Community}
+                options={{
+                    title: 'Community',
+                    tabBarIcon: ({color, size}) => (
+                        <IconM name="dashboard" color={color} size={size} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Setting"
+                component={Setting}
+                options={{
+                    title: 'Setting',
+                    tabBarIcon: ({color, size}) => (
+                        <Icon name="settings-outline" color={color} size={size} />
+                    ),
+                }}
+            />
+        </Tab.Navigator>
+    );
+};
 
 const Auth = () => {
     return (
@@ -16,10 +69,10 @@ const Auth = () => {
                 component={Login}
                 options={{title: ''}}/>
 
-            {/*<Stack.Screen
+            <Stack.Screen
                 name="Register"
                 component={Register}
-                options={{title: ''}}/>*/}
+                options={{title: ''}}/>
         </Stack.Navigator>
     );
 };
@@ -41,12 +94,12 @@ const App: () => React$Node = () => {
                   component={Auth}
                   options={{headerShown: false}}/>
               {/* Navigation Drawer as a landing page */}
-              {/*
+
               <Stack.Screen
-                  name="DrawerNavigationRoutes"
-                  component={DrawerNavigationRoutes}
+                  name="MainTab"
+                  component={MainTab}
                   // Hiding header for Navigation Drawer
-                  options={{headerShown: false}}/>*/}
+                  options={{headerShown: false}}/>
           </Stack.Navigator>
       </NavigationContainer>
   );
