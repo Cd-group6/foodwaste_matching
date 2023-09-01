@@ -7,9 +7,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Login from "./src/auth/Login"
 import First from "./src/auth/First"
 import Register from "./src/auth/Register"
-import Home from "./src/pages/Home"
+import Chat from "./src/pages/Chat"
 import Setting from "./src/pages/Setting"
 import Community from "./src/pages/Community"
+
+import Match from "./src/pages/Match"
 
 import {theme} from "./src/colors.js";
 import IconM from 'react-native-vector-icons/MaterialIcons';
@@ -17,19 +19,37 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const HomeStack = createStackNavigator();
+
+const HomeStackScreen = () => {
+    return(
+        <HomeStack.Navigator initialRouteName="Chat">
+            <HomeStack.Screen
+                name="Chat"
+                component={Chat}
+                options={{headerShown: false}}/>
+
+            <HomeStack.Screen
+                name="Match"
+                component={Match}
+                options={{headerShown: false}}/>
+
+        </HomeStack.Navigator>
+    );
+};
 
 const MainTab = ({navigation, route}) => {
     return(
         <Tab.Navigator
-            initialRouteName="Home"
+            initialRouteName="HomeStackScreen"
             screenOptions={{
                 tabBarActiveTintColor: theme.mainC,
                 tabBarInactiveTintColor: theme.grey,
                 headerShown: false,
             }}>
             <Tab.Screen
-                name="Home"
-                component={Home}
+                name="HomeStackScreen"
+                component={HomeStackScreen}
                 options={{
                     title: 'Home',
                     tabBarIcon: ({color, size}) => (
@@ -100,6 +120,7 @@ const App: () => React$Node = () => {
                   component={MainTab}
                   // Hiding header for Navigation Drawer
                   options={{headerShown: false}}/>
+
           </Stack.Navigator>
       </NavigationContainer>
   );

@@ -8,19 +8,17 @@ import React from "react";
           StatusBar
           } from 'react-native';
       import {theme} from "../colors.js";
-      import Search from '../components/SearchBar'
-      import Header from '../components/Header'
+
 
       export default function App() {
 
           return (
               <View style={styles.container}>
                   <StatusBar style="auto" />
-                  <Search />
-                  <Header />
+
                   <ScrollView showsVerticalScrollIndicator={false}>
                       <View style={styles.room}>
-                          <Text style={styles.chat}> asdf </Text>
+                          <Text style={styles.chat}> setting </Text>
                       </View>
                       <View style={styles.chat}></View>
                       <View style={styles.chat}></View>
