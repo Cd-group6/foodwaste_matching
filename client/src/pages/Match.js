@@ -12,9 +12,12 @@ import {
     StatusBar,
     TouchableOpacity,
     Switch,
+    TextInput,
     } from 'react-native';
 import {theme} from "../colors.js";
 import Search from '../components/SearchBar'
+
+import Postcode from '@actbase/react-daum-postcode';
 
 const Match = ({navigation}) => {
 
@@ -39,9 +42,6 @@ const Match = ({navigation}) => {
                 <Text style={styles.textM}>매칭</Text>
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.room}>
-                    <Text style={styles.chat}> Match </Text>
-                </View>
 
                 <View style={styles.line}></View>
 
@@ -75,6 +75,19 @@ const Match = ({navigation}) => {
                         onValueChange={tSwitch3}
                         value={agree}/>
                 </View>
+
+
+                <View style={styles.number_text}>
+                    <Text style={styles.text}></Text>
+                </View>
+
+                <Postcode
+                    style={{ width: '100%', height: '100%' }}
+                    jsOptions={{ animation: true }}
+                    onSelected={(data)=>this.getAddressData(data)}
+                />
+
+
                 <TouchableOpacity
                     style={styles.btn}
                     onPress={() => navigation.navigate('Chat')}>
@@ -129,7 +142,7 @@ const styles = StyleSheet.create({
        line:{
             borderTopWidth:2,
             borderColor:theme.grey,
-            marginTop:10,
+            marginTop:38,
             width: '100%',
        },
        option1:{

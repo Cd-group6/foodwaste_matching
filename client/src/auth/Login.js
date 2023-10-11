@@ -1,7 +1,8 @@
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
+import ResultView from './IntroView';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as React from 'react';
+import { useState,useEffect} from 'react';
 import {
     StyleSheet,
     Text,
@@ -11,122 +12,207 @@ import {
     Image,
     Button,
     TouchableOpacity,
-    TextInput,
+    ActivityIndicator,
+    SafeAreaView,
     } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import * as React from 'react';
-import { useState,useEffect} from 'react';
+import {
+  KakaoOAuthToken,
+  KakaoProfile,
+  loginWithKakaoAccount,
+  getProfile as getKakaoProfile,
+  login,
+  logout,
+  unlink,
+} from '@react-native-seoul/kakao-login';
+
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp,
+    } from 'react-native-responsive-screen';
+
 import {theme} from "../colors.js";
-import img from '../assets/images/StartImg.png';
-
-
+import Logo from '../assets/images/Logo.png';
+import Simg from '../assets/images/StartImg.png';
 
 
 
 const Login = ({navigation}) => {
-    return (
-        <View style={styles.container}>
-            <View style={styles.topArea}>
-                <Image style={styles.img} source={img} />
-                <Text style={styles.guide}>ID와 PASSWORD를 입력해주세요.</Text>
-            </View>
-            <View style={styles.formArea}>
-                <Text style={styles.formText}>아이디</Text>
-                <TextInput style={styles.textFormTop} placeholder={'ID'} />
-                <Text style={styles.formText}>패스워드</Text>
-                <TextInput style={styles.textFormBottom} placeholder={'PASSWORD'} />
+    const [token, setToken] = useState(true);
+    const [result, setResult] = useState(true);
+    const [accessToken, setAccessToken] = useState(true);
 
-            </View>
-            <View style={{flex: 1}}>
+    const signInWithKakao = async (): Promise<void> => {
+      try {
+        const token = await login();
+        setToken(JSON.stringify(token));
+        await AsyncStorage.setItem('accessToken', JSON.stringify(token));
+        AsyncStorage.getItem('accessToken').then((value) =>
+            navigation.replace(value === null ? 'Auth' : 'MainTab'),//뒷 부분 변경 필
+        );
+
+      } catch (err) {
+        console.error('login err', err);
+      }
+    };
+
+    const signOutWithKakao = async (): Promise<void> => {
+      const message = await logout();
+
+      setResult(message);
+    };
+
+    const getProfile = async (): Promise<void> => {
+      try {
+        const profile = await getKakaoProfile();
+
+        setResult(JSON.stringify(profile));    //profile.nickname
+      } catch (err) {
+        console.error('signOut error', err);
+      }
+    };
+
+    const unlinkKakao = async (): Promise<void> => {
+      const message = await unlink();
+
+      setResult(message);
+    };
+
+    useEffect(() => {
+        const getData = async () => {
+            const storageData =
+            	JSON.stringify(await AsyncStorage.getItem("accessToken"));
+            if(storageData) {
+
+                setAccessToken(storageData);
+            }
+        }
+        // AsyncStorage에 저장된 데이터가 있다면, 불러온다.
+        getData();
+
+
+
+    }, []);
+
+    return (
+        <ScrollView style={styles.container}>
+            <StatusBar style="auto" />
+            <View style={styles.logoCon}>
+                <Image style={styles.logo} source={Logo} />
+                <Text style={styles.expl}>
+                    실시간 매칭 음식물 쓰레기 처리 공유 플랫폼
+                </Text>
+                <Image style={styles.simg} source={Simg} />
                 <View style={styles.btnArea}>
-                    <TouchableOpacity
-                        style={styles.btn}
+                    <TouchableOpacity style={styles.btn}
                         onPress={() => navigation.navigate('MainTab')}>
-                    <Text style={(styles.Text, {color: 'white'})}>로그인</Text>
+                        <Text style={styles.btnText}>화면전환 임시버튼</Text>
                     </TouchableOpacity>
-                    <Text
-                      style={styles.TextRegister}
-                      onPress={() => navigation.navigate('Register')}>
-                      처음이시라면 회원가입이 필요해요
-                    </Text>
+                    <TouchableOpacity style={styles.btn}
+                        onPress={() => {signInWithKakao();}}>
+                        <Text style={styles.btnText}>카카오로 로그인</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.btn}
+                         onPress={() => getProfile()}>
+                        <Text style={styles.btnText}>프로필 받기</Text>
+                    </TouchableOpacity>
+
+
+                    <ResultView result={accessToken} />
+
                 </View>
             </View>
-        </View>
+        </ScrollView>
     );
-}
+};
 
 const styles = StyleSheet.create({
-   container:{
-        flex:1,
-        flexDirection: 'column',
-        backgroundColor: 'white',
-        paddingLeft: wp(7),
-        paddingRight: wp(7),
-   },
-   topArea: {
-        flex: 1,
-        paddingTop: wp(2),
-   },
-   guide:{
-        flex:1,
-        color:"black",
-        marginTop:-124,
-   },
-   img:{
-        flex:1.3,
-        marginTop: 0,
-        width:'150%',
-        resizeMode: 'contain',
-   },
-   formArea: {
-        justifyContent: 'center',
-        marginTop: -150,
-        paddingTop: wp(10),
-        flex: 1.5,
-     },
-   textFormTop: {
-        borderWidth: 2,
-        borderBottomWidth: 2,
-        borderColor: 'black',
-        borderRadius:10,
-        width: '100%',
-        height: hp(6),
-        paddingLeft: 15,
-        paddingRight: 10,
-   },
-   textFormBottom: {
-        borderWidth: 2,
-        borderTopWidth: 2,
-        borderColor: 'black',
-        borderRadius:10,
-        width: '100%',
-        height: hp(6),
-        paddingLeft: 15,
-        paddingRight: 10,
-   },
-   formText:{
-        paddingBottom: 6,
-        paddingTop:20,
-        paddingLeft:7,
-        color:"black",
-   },
-   btnArea: {
-        height: hp(9),
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingBottom: hp(1.5),
-        marginTop: -20,
-   },
-   btn: {
-        flex: 1,
-        width: '100%',
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: theme.mainC,
-   },
-});
+       container: {
+          backgroundColor: theme.bg,
+          paddingHorizontal:20,
+       },
+       logoCon:{
+          alignItems:"center",
+       },
+       logo: {
+          marginTop: 30,
+          width:350,
+          resizeMode: 'contain',
+       },
+       expl: {
+          marginTop:10,
+       },
+       simg: {
+          marginTop:-250,
+          width:300,
+          resizeMode: 'contain',
+       },
+       btnArea: {
+          marginTop:-260,
+          width:200,
+       },
+       btn: {
+         width: 200,
+         height:40,
+         borderRadius: 5,
+         justifyContent: 'center',
+         alignItems: 'center',
+         backgroundColor: "#fef01b",
+       },
+       btnText: {
+         color: 'black',
+         justifyContent: 'center',
+         alignItems: 'center',
+       },
+       activityIndicator: {
+         alignItems: 'center',
+         height: 80,
+         marginTop:-200,
+       },
+   });
 
+export default Login
 
-export  default Login
+{/*
+import {StyleSheet, Text, View, Button, SafeAreaView} from 'react-native';
+import React from 'react';
+import {
+  KakaoOAuthToken,
+  KakaoProfile,
+  getProfile as getKakaoProfile,
+  login,
+  logout,
+  unlink,
+} from '@react-native-seoul/kakao-login';
+
+export default function App() {
+  const signInWithKakao = async (): Promise<void> => {
+    const token: KakaoOAuthToken = await login();
+
+    setResult(JSON.stringify(token));
+  };
+
+  const signOutWithKakao = async (): Promise<void> => {
+    const message = await logout();
+
+    setResult(message);
+  };
+
+  const getKakaoProfile = async (): Promise<void> => {
+    const profile: KakaoProfile = await getProfile();
+
+    setResult(JSON.stringify(profile));
+  };
+
+  const unlinkKakao = async (): Promise<void> => {
+    const message = await unlink();
+
+    setResult(message);
+  };
+
+  return (
+    <SafeAreaView>
+      <Button title="로그인" onPress={signInWithKakao} />
+    </SafeAreaView>
+  );
+}*/}

@@ -13,6 +13,8 @@ import Community from "./src/pages/Community"
 
 import Match from "./src/pages/Match"
 
+import Room from "./src/pages/Room"
+
 import {theme} from "./src/colors.js";
 import IconM from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -32,6 +34,11 @@ const HomeStackScreen = () => {
             <HomeStack.Screen
                 name="Match"
                 component={Match}
+                options={{headerShown: false}}/>
+
+            <HomeStack.Screen
+                name="Room"
+                component={Room}
                 options={{headerShown: false}}/>
 
         </HomeStack.Navigator>

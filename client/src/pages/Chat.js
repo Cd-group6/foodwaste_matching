@@ -1,5 +1,8 @@
+import ResultView from '../auth/IntroView';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import React from "react";
-import { useState,useEffect} from 'react';
+import { useState,useEffect, useCallback} from 'react';
 import {
     StyleSheet,
     Text,
@@ -10,9 +13,10 @@ import {
     } from 'react-native';
 import {theme} from "../colors.js";
 import Search from '../components/SearchBar'
-//import Header from '../components/Header'
 
 const Home = ({navigation}) => {
+    const [accessToken, setAccessToken] = useState(true);
+
 
     return (
         <View style={styles.container}>
@@ -28,7 +32,9 @@ const Home = ({navigation}) => {
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.room}>
-                    <Text style={styles.chat}> Chat </Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('Room')}>
+                        <Text style={styles.textm}>chat</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.chat}></View>
                 <View style={styles.chat}></View>
