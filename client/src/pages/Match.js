@@ -16,6 +16,8 @@ import {
 import {theme} from "../colors.js";
 import Search from '../components/SearchBar'
 
+import Postcode from '@actbase/react-daum-postcode';
+
 const Match = ({navigation}) => {
 
     const [size, setSize] = useState(false);
@@ -39,9 +41,6 @@ const Match = ({navigation}) => {
                 <Text style={styles.textM}>매칭</Text>
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.room}>
-                    <Text style={styles.chat}> Match </Text>
-                </View>
 
                 <View style={styles.line}></View>
 
@@ -75,6 +74,11 @@ const Match = ({navigation}) => {
                         onValueChange={tSwitch3}
                         value={agree}/>
                 </View>
+                <TouchableOpacity
+                                    style={styles.btn}
+                                    onPress={() => navigation.navigate('Chat')}>
+                                    <Text style={(styles.Text, {color: 'white'})}>매칭 시작</Text>
+                                </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.btn}
                     onPress={() => navigation.navigate('Chat')}>
@@ -129,7 +133,7 @@ const styles = StyleSheet.create({
        line:{
             borderTopWidth:2,
             borderColor:theme.grey,
-            marginTop:10,
+            marginTop:38,
             width: '100%',
        },
        option1:{

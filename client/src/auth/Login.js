@@ -1,3 +1,6 @@
+import ResultView from './IntroView';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as React from 'react';
 import { useState,useEffect} from 'react';
 import {
@@ -16,6 +19,7 @@ import {
 import {
   KakaoOAuthToken,
   KakaoProfile,
+  loginWithKakaoAccount,
   getProfile as getKakaoProfile,
   login,
   logout,
@@ -34,11 +38,19 @@ import Simg from '../assets/images/StartImg.png';
 
 
 const Login = ({navigation}) => {
+    const [token, setToken] = useState(true);
+    const [result, setResult] = useState(true);
+    const [accessToken, setAccessToken] = useState(true);
 
     const signInWithKakao = async (): Promise<void> => {
-      const token: KakaoOAuthToken = await login();
+      try {
+        const token = await login();
+        setToken(JSON.stringify(token));
+        await AsyncStorage.setItem('accessToken', JSON.stringify(token));
 
-      setResult(JSON.stringify(token));
+      } catch (err) {
+        console.error('login err', err);
+      }
     };
 
     const signOutWithKakao = async (): Promise<void> => {
@@ -47,10 +59,14 @@ const Login = ({navigation}) => {
       setResult(message);
     };
 
-    const getKakaoProfile = async (): Promise<void> => {
-      const profile: KakaoProfile = await getProfile();
+    const getProfile = async (): Promise<void> => {
+      try {
+        const profile = await getKakaoProfile();
 
-      setResult(JSON.stringify(profile));
+        setResult(JSON.stringify(profile));    //profile.nickname
+      } catch (err) {
+        console.error('signOut error', err);
+      }
     };
 
     const unlinkKakao = async (): Promise<void> => {
@@ -58,6 +74,19 @@ const Login = ({navigation}) => {
 
       setResult(message);
     };
+
+    useEffect(() => {
+        const getData = async () => {
+            const storageData =
+            	JSON.stringify(await AsyncStorage.getItem("accessToken"));
+            if(storageData) {
+
+                setAccessToken(storageData);
+            }
+        }
+        // AsyncStorage에 저장된 데이터가 있다면, 불러온다.
+        getData();
+    }, []);
 
     return (
         <ScrollView style={styles.container}>
@@ -74,9 +103,17 @@ const Login = ({navigation}) => {
                         <Text style={styles.btnText}>화면전환 임시버튼</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.btn}
-                        onPress={signInWithKakao}>
+                        onPress={() => {signInWithKakao();}}>
                         <Text style={styles.btnText}>카카오로 로그인</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity style={styles.btn}
+                         onPress={() => getProfile()}>
+                        <Text style={styles.btnText}>프로필 받기</Text>
+                    </TouchableOpacity>
+
+
+                    <ResultView result={accessToken} />
+
                 </View>
             </View>
         </ScrollView>

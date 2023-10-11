@@ -23,16 +23,35 @@ import {theme} from "../colors.js";
 import Logo from '../assets/images/Logo.png';
 import Simg from '../assets/images/StartImg.png';
 
+
+
 const FirstScreen = ({navigation}) => {
     const [animating, setAnimating] = useState(true);
+
+    const [accessToken, setAccessToken] = useState(true);
+
     useEffect(() => {
+
+        const getData = async () => {
+            const storageData =
+            	JSON.stringify(await AsyncStorage.getItem("accessToken"));
+            if(storageData) {
+
+                setAccessToken(storageData);
+            }
+        }
+
+        getData();
+
         setTimeout(() => {
             setAnimating(false);
-            AsyncStorage.getItem('user_id').then((value) =>
-                navigation.replace(value === null ? 'Auth' : 'Auth'),//뒷 부분 변경 필
+            AsyncStorage.getItem('accessToken').then((value) =>
+                navigation.replace(value === null ? 'Auth' : 'MainTab'),//뒷 부분 변경 필
             );
-        }, 5000);
+        }, 3000);
     }, []);
+
+
 
     return (
         <ScrollView style={styles.container}>
