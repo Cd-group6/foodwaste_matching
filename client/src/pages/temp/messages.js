@@ -1,5 +1,5 @@
 export default [
-  {
+  /*{
     _id: 9,
     text: '#awesome 3',
     createdAt: new Date(),
@@ -164,5 +164,5 @@ export default [
       _id: 2,
       name: 'React Native',
     },
-  },
+  },*/
 ]

@@ -47,6 +47,9 @@ const Login = ({navigation}) => {
         const token = await login();
         setToken(JSON.stringify(token));
         await AsyncStorage.setItem('accessToken', JSON.stringify(token));
+        AsyncStorage.getItem('accessToken').then((value) =>
+            navigation.replace(value === null ? 'Auth' : 'MainTab'),//뒷 부분 변경 필
+        );
 
       } catch (err) {
         console.error('login err', err);
@@ -86,6 +89,9 @@ const Login = ({navigation}) => {
         }
         // AsyncStorage에 저장된 데이터가 있다면, 불러온다.
         getData();
+
+
+
     }, []);
 
     return (

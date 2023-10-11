@@ -12,6 +12,7 @@ import {
     StatusBar,
     TouchableOpacity,
     Switch,
+    TextInput,
     } from 'react-native';
 import {theme} from "../colors.js";
 import Search from '../components/SearchBar'
@@ -74,11 +75,19 @@ const Match = ({navigation}) => {
                         onValueChange={tSwitch3}
                         value={agree}/>
                 </View>
-                <TouchableOpacity
-                                    style={styles.btn}
-                                    onPress={() => navigation.navigate('Chat')}>
-                                    <Text style={(styles.Text, {color: 'white'})}>매칭 시작</Text>
-                                </TouchableOpacity>
+
+
+                <View style={styles.number_text}>
+                    <Text style={styles.text}></Text>
+                </View>
+
+                <Postcode
+                    style={{ width: '100%', height: '100%' }}
+                    jsOptions={{ animation: true }}
+                    onSelected={(data)=>this.getAddressData(data)}
+                />
+
+
                 <TouchableOpacity
                     style={styles.btn}
                     onPress={() => navigation.navigate('Chat')}>

@@ -46,7 +46,7 @@ const FirstScreen = ({navigation}) => {
         setTimeout(() => {
             setAnimating(false);
             AsyncStorage.getItem('accessToken').then((value) =>
-                navigation.replace(value === null ? 'Auth' : 'MainTab'),//뒷 부분 변경 필
+                navigation.replace(value === null ? 'Auth' : 'MainTab'),//뒷 부분 변경 필 MainTab
             );
         }, 3000);
     }, []);
