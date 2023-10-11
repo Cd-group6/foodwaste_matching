@@ -1,4 +1,4 @@
-package com.cd6.server;
+package foodwasting.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

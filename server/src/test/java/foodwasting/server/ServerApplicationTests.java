@@ -1,4 +1,4 @@
-package com.cd6.server;
+package foodwasting.server;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
