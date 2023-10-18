@@ -36,6 +36,7 @@ const Home = ({navigation}) => {
                         <Text style={styles.textm}>chat</Text>
                     </TouchableOpacity>
                 </View>
+
                 <View style={styles.chat}></View>
                 <View style={styles.chat}></View>
             </ScrollView>

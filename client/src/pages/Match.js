@@ -30,6 +30,10 @@ const Match = ({navigation}) => {
     const [agree, setAgree] = useState(false);
     const tSwitch3 = () => setAgree(previousState => !previousState);
 
+    const [postcode, setPostcode] = useState('');
+    const [addr, setAddr] = useState('');
+    const [extraAddr, setExtraAddr] = useState('');
+
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
@@ -81,11 +85,40 @@ const Match = ({navigation}) => {
                     <Text style={styles.text}></Text>
                 </View>
 
-                <Postcode
-                    style={{ width: '100%', height: '100%' }}
-                    jsOptions={{ animation: true }}
-                    onSelected={(data)=>this.getAddressData(data)}
-                />
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                      <Postcode
+                        style={{ width: '100%', height: 200 }}
+                        jsOptions={{ animated: true }}
+                        onSelected={(data) => {
+                          setAddr('');
+                          setExtraAddr('');
+                          setPostcode(data.zonecode);
+                          if (data.userSelectedType === 'R') {
+
+                            setAddr(data.roadAddress);
+
+                            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                              setExtraAddr(data.bname);
+
+                              if (data.buildingName !== '' && data.apartment === 'Y') {
+                                setExtraAddr((prev) => {
+                                  return prev !== '' ? `${prev}, ${data.buildingName}` : `${data.buildingName}`;
+                                });
+                              }
+                            } else {
+                              setExtraAddr('');
+                            }
+                          } else {
+                            setExtraAddr(data.jibunAddress);
+                          }
+                        }}
+                      />
+                      <Text>우편번호:{postcode}</Text>
+                      <Text>
+                        도로명/지번 :{addr} ({extraAddr})
+                      </Text>
+                    </View>
+
 
 
                 <TouchableOpacity

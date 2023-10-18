@@ -1,8 +1,9 @@
 import ResultView from './IntroView';
 
+import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as React from 'react';
-import { useState,useEffect} from 'react';
+import { useState, useEffect} from 'react';
 import {
     StyleSheet,
     Text,
@@ -38,22 +39,45 @@ import Simg from '../assets/images/StartImg.png';
 
 
 const Login = ({navigation}) => {
-    const [token, setToken] = useState(true);
-    const [result, setResult] = useState(true);
-    const [accessToken, setAccessToken] = useState(true);
+    const [token, setToken] = useState("");
+    const [result, setResult] = useState("");
+    const [accessToken, setAccessToken] = useState("");
+    const [id, setId] = useState('');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
 
     const signInWithKakao = async (): Promise<void> => {
+
       try {
         const token = await login();
         setToken(JSON.stringify(token));
         await AsyncStorage.setItem('accessToken', JSON.stringify(token));
+        const profile = await getKakaoProfile();
+        axios.post("http://10.0.2.2:8080/api/members", {
+            name: profile.nickname, email: profile.email
+        })
+          .then(response => {
+              AsyncStorage.setItem('id',JSON.stringify(response.data.id));
+
+          })
+          .catch(error => {
+            console.error(error);
+          });
+
+        await AsyncStorage.setItem('name',JSON.stringify(profile.nickname));
+        await AsyncStorage.setItem('email',JSON.stringify(profile.email));
+
+        console.log(JSON.stringify(await AsyncStorage.getItem('id')));
+
         AsyncStorage.getItem('accessToken').then((value) =>
-            navigation.replace(value === null ? 'Auth' : 'MainTab'),//뒷 부분 변경 필
+            navigation.replace(value === null ? 'Auth' : 'Auth'),//뒷 부분 변경 필
         );
 
       } catch (err) {
         console.error('login err', err);
       }
+
+
     };
 
     const signOutWithKakao = async (): Promise<void> => {
@@ -94,6 +118,8 @@ const Login = ({navigation}) => {
 
     }, []);
 
+
+
     return (
         <ScrollView style={styles.container}>
             <StatusBar style="auto" />
@@ -113,12 +139,13 @@ const Login = ({navigation}) => {
                         <Text style={styles.btnText}>카카오로 로그인</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.btn}
-                         onPress={() => getProfile()}>
-                        <Text style={styles.btnText}>프로필 받기</Text>
+                         onPress={() => {signOutWithKakao();}}>
+                        <Text style={styles.btnText}>로그아웃</Text>
                     </TouchableOpacity>
 
 
-                    <ResultView result={accessToken} />
+
+                    {/*<ResultView result={accessToken} />*/}
 
                 </View>
             </View>
