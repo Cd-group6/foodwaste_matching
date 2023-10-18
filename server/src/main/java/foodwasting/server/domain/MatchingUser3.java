@@ -20,9 +20,8 @@ public class MatchingUser3 {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private Boolean size;
     private String address;
 
-    private Long latitude = -1L;
-    private Long longitude = -1L;
+    private Long latitude;
+    private Long longitude;
 }
