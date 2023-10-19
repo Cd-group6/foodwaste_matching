@@ -10,13 +10,25 @@ import {
     ScrollView,
     StatusBar,
     TouchableOpacity,
+    Image,
     } from 'react-native';
 import {theme} from "../colors.js";
 import Search from '../components/SearchBar'
 
 const Home = ({navigation}) => {
     const [accessToken, setAccessToken] = useState(true);
+    const [name, setName] = useState('');
+    const [imgURL, setImgURL] = useState('');
 
+    useEffect(() => {
+        const getName = async () => {
+            setName(await AsyncStorage.getItem("name"));
+            setImgURL(await AsyncStorage.getItem("imgURL"));
+        }
+        getName();
+
+
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -33,7 +45,8 @@ const Home = ({navigation}) => {
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.room}>
                     <TouchableOpacity onPress={() => navigation.navigate('Room')}>
-                        <Text style={styles.textm}>chat</Text>
+                        <Image source={{imgURL}}/>
+                        <Text style={styles.textm}>{name.replaceAll("\"", "")}</Text>
                     </TouchableOpacity>
                 </View>
 

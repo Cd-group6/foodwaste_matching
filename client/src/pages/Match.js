@@ -53,6 +53,21 @@ const Match = ({navigation}) => {
                 console.error('login err', err);
               }
     };
+     const makeRoom = async (): Promise<void> => {
+            try {
+                    axios.post("http://10.0.2.2:8080/chat?name=asdf")
+                      .then(response => {
+                          console.log(response.data);
+
+                      })
+                      .catch(error => {
+                        console.error(error);
+                      });
+
+                  } catch (err) {
+                    console.error('login err', err);
+                  }
+        };
 
     useEffect(() => {
           const getId = async () => {
@@ -158,6 +173,12 @@ const Match = ({navigation}) => {
                     style={styles.btn}
                     onPress={() => {matchSend();}}>
                     <Text style={(styles.Text, {color: 'white'})}>매칭 시작</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.btn}
+                    onPress={() => {makeRoom();}}>
+                    <Text style={(styles.Text, {color: 'white'})}>방만들기</Text>
                 </TouchableOpacity>
             </ScrollView>
         </View>

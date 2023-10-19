@@ -45,6 +45,7 @@ const Login = ({navigation}) => {
     const [id, setId] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [imgURL, setImgURL] = useState('');
 
     const signInWithKakao = async (): Promise<void> => {
 
@@ -63,9 +64,10 @@ const Login = ({navigation}) => {
           .catch(error => {
             console.error(error);
           });
-
+        console.log(profile);
         await AsyncStorage.setItem('name',JSON.stringify(profile.nickname));
         await AsyncStorage.setItem('email',JSON.stringify(profile.email));
+        await AsyncStorage.setItem('imgURL',JSON.stringify(profile.thumbnailImageUrl));
 
         console.log(JSON.stringify(await AsyncStorage.getItem('id')));
 
