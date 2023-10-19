@@ -13,6 +13,7 @@ public class MatchingService {
 
     private final MemberRepository memberRepository;
     private final MatchingRepository matchingRepository;
+    private final  MatchedRepository matchedRepository;
     private Matching matching;
 
     @Transactional
@@ -60,6 +61,19 @@ public class MatchingService {
         matchingRepository.save(matching);
 
         return matching.getId();
+    }
+
+    @Transactional
+    public void matched(Member member1, Member member2, Member member3) {
+
+        Matched matched = Matched.builder()
+                .owner(member1)
+                .user1(member2)
+                .user2(member3)
+                .build();
+
+        matchedRepository.save(matched);
+
     }
 
 }
