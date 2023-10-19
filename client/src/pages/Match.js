@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios";
 import React from "react";
 import { useState,useEffect} from 'react';
 import {
@@ -33,7 +35,38 @@ const Match = ({navigation}) => {
     const [postcode, setPostcode] = useState('');
     const [addr, setAddr] = useState('');
     const [extraAddr, setExtraAddr] = useState('');
+    const [id, setId] = useState('');
+    const matchSend = async (): Promise<void> => {
+        try {
+                axios.post("http://10.0.2.2:8080/api/matching", {
+                    memberId: id, trashSize: size, trashOwn: trashCan, address: addr
+                })
+                  .then(response => {
+                      console.log(response.data);
 
+                  })
+                  .catch(error => {
+                    console.error(error);
+                  });
+
+              } catch (err) {
+                console.error('login err', err);
+              }
+    };
+
+    useEffect(() => {
+          const getId = async () => {
+              const idData = await AsyncStorage.getItem("id");
+              console.log(JSON.stringify(await AsyncStorage.getItem("id")));
+              if(idData) {
+                  setId(idData);
+              }
+          }
+
+          getId();
+
+
+      }, []);
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
@@ -123,7 +156,7 @@ const Match = ({navigation}) => {
 
                 <TouchableOpacity
                     style={styles.btn}
-                    onPress={() => navigation.navigate('Chat')}>
+                    onPress={() => {matchSend();}}>
                     <Text style={(styles.Text, {color: 'white'})}>매칭 시작</Text>
                 </TouchableOpacity>
             </ScrollView>
@@ -207,5 +240,4 @@ const styles = StyleSheet.create({
             marginTop: wp(16),
        },
 });
-
 export  default Match
