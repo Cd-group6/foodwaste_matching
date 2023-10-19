@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios";
 import React from "react";
 import { useState,useEffect} from 'react';
 import {
@@ -30,6 +32,56 @@ const Match = ({navigation}) => {
     const [agree, setAgree] = useState(false);
     const tSwitch3 = () => setAgree(previousState => !previousState);
 
+    const [postcode, setPostcode] = useState('');
+    const [addr, setAddr] = useState('');
+    const [extraAddr, setExtraAddr] = useState('');
+    const [id, setId] = useState('');
+    const matchSend = async (): Promise<void> => {
+        try {
+                axios.post("http://10.0.2.2:8080/api/matching", {
+                    memberId: id, trashSize: size, trashOwn: trashCan, address: addr
+                })
+                  .then(response => {
+                      console.log(response.data);
+
+                  })
+                  .catch(error => {
+                    console.error(error);
+                  });
+
+              } catch (err) {
+                console.error('login err', err);
+              }
+    };
+     const makeRoom = async (): Promise<void> => {
+            try {
+                    axios.post("http://10.0.2.2:8080/chat?name=asdf")
+                      .then(response => {
+                          console.log(response.data);
+
+                      })
+                      .catch(error => {
+                        console.error(error);
+                      });
+
+                  } catch (err) {
+                    console.error('login err', err);
+                  }
+        };
+
+    useEffect(() => {
+          const getId = async () => {
+              const idData = await AsyncStorage.getItem("id");
+              console.log(JSON.stringify(await AsyncStorage.getItem("id")));
+              if(idData) {
+                  setId(idData);
+              }
+          }
+
+          getId();
+
+
+      }, []);
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
@@ -81,17 +133,52 @@ const Match = ({navigation}) => {
                     <Text style={styles.text}></Text>
                 </View>
 
-                <Postcode
-                    style={{ width: '100%', height: '100%' }}
-                    jsOptions={{ animation: true }}
-                    onSelected={(data)=>this.getAddressData(data)}
-                />
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                      <Postcode
+                        style={{ width: '100%', height: 200 }}
+                        jsOptions={{ animated: true }}
+                        onSelected={(data) => {
+                          setAddr('');
+                          setExtraAddr('');
+                          setPostcode(data.zonecode);
+                          if (data.userSelectedType === 'R') {
+
+                            setAddr(data.roadAddress);
+
+                            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                              setExtraAddr(data.bname);
+
+                              if (data.buildingName !== '' && data.apartment === 'Y') {
+                                setExtraAddr((prev) => {
+                                  return prev !== '' ? `${prev}, ${data.buildingName}` : `${data.buildingName}`;
+                                });
+                              }
+                            } else {
+                              setExtraAddr('');
+                            }
+                          } else {
+                            setExtraAddr(data.jibunAddress);
+                          }
+                        }}
+                      />
+                      <Text>우편번호:{postcode}</Text>
+                      <Text>
+                        도로명/지번 :{addr} ({extraAddr})
+                      </Text>
+                    </View>
+
 
 
                 <TouchableOpacity
                     style={styles.btn}
-                    onPress={() => navigation.navigate('Chat')}>
+                    onPress={() => {matchSend();}}>
                     <Text style={(styles.Text, {color: 'white'})}>매칭 시작</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.btn}
+                    onPress={() => {makeRoom();}}>
+                    <Text style={(styles.Text, {color: 'white'})}>방만들기</Text>
                 </TouchableOpacity>
             </ScrollView>
         </View>
@@ -174,5 +261,4 @@ const styles = StyleSheet.create({
             marginTop: wp(16),
        },
 });
-
 export  default Match
