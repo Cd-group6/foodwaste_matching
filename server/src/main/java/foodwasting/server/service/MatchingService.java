@@ -12,59 +12,68 @@ import org.springframework.stereotype.Service;
 public class MatchingService {
 
     private final MemberRepository memberRepository;
-    private final MatchingOwner3Repository matchingOwner3Repository;
-    private final MatchingOwner5Repository matchingOwner5Repository;
-    private final MatchingUser3Repository matchingUser3Repository;
-    private final MatchingUser5Repository matchingUser5Repository;
+    private final MatchingRepository matchingRepository;
+    private final  MatchedRepository matchedRepository;
+    private Matching matching;
 
     @Transactional
     public Long matching(CreateMatchingRequest request) {
 
-        Member member = memberRepository.getById(request.getMemberId());
+        Member member = memberRepository.findById(request.getMemberId()).get();
 
         if(request.getTrashOwn()) {
 
             if (request.getTrashSize()) {
-                MatchingOwner3 matchingOwner3 = MatchingOwner3.builder()
+                matching = Matching.builder()
                         .member(member)
                         .address(request.getAddress())
+                        .size(3)
+                        .trashOwn(true)
                         .build();
 
-                matchingOwner3Repository.save(matchingOwner3);
-
-                return matchingOwner3.getId();
             } else {
-                MatchingOwner5 matchingOwner5 = MatchingOwner5.builder()
+                matching = Matching.builder()
                         .member(member)
                         .address(request.getAddress())
+                        .size(5)
+                        .trashOwn(true)
                         .build();
-
-                matchingOwner5Repository.save(matchingOwner5);
-
-                return matchingOwner5.getId();
             }
 
         } else {
             if (request.getTrashSize()) {
-                MatchingUser3 matchingUser3 = MatchingUser3.builder()
+                matching = Matching.builder()
                         .member(member)
                         .address(request.getAddress())
+                        .size(5)
+                        .trashOwn(false)
                         .build();
-
-                matchingUser3Repository.save(matchingUser3);
-
-                return matchingUser3.getId();
             } else {
-                MatchingUser5 matchingUser5 = MatchingUser5.builder()
+                matching = Matching.builder()
                         .member(member)
                         .address(request.getAddress())
+                        .size(5)
+                        .trashOwn(false)
                         .build();
-
-                matchingUser5Repository.save(matchingUser5);
-
-                return matchingUser5.getId();
             }
         }
+
+        matchingRepository.save(matching);
+
+        return matching.getId();
+    }
+
+    @Transactional
+    public void matched(Member member1, Member member2, Member member3) {
+
+        Matched matched = Matched.builder()
+                .owner(member1)
+                .user1(member2)
+                .user2(member3)
+                .build();
+
+        matchedRepository.save(matched);
+
     }
 
 }

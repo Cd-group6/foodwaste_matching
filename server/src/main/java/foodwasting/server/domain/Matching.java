@@ -9,19 +9,20 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MatchingOwner5 {
+public class Matching {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "matching_owner_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
     private Member member;
 
     private String address;
 
     private Long latitude;
     private Long longitude;
+
+    private Integer size;
+    private Boolean trashOwn;
 }

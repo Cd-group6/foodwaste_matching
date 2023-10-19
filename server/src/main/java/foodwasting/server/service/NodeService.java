@@ -1,8 +1,11 @@
 package foodwasting.server.service;
 
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+
+@Getter
 @Service
 public class NodeService implements Comparable<NodeService> {
     long[] axes;
