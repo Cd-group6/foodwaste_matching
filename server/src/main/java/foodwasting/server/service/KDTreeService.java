@@ -1,10 +1,11 @@
 package foodwasting.server.service;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 import org.w3c.dom.Node;
 
 import java.util.PriorityQueue;
 import java.util.ArrayList;
-
+@Service
 public class KDTreeService {
     int k = 2; // 2 dimensional
     // depth = 0

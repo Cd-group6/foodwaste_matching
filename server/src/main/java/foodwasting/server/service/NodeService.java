@@ -1,6 +1,9 @@
 package foodwasting.server.service;
 
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
+@Service
 public class NodeService implements Comparable<NodeService> {
     long[] axes;
     NodeService left, right; // left, right, parent
