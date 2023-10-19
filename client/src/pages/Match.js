@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios";
 import React from "react";
 import { useState,useEffect} from 'react';
 import {
@@ -20,7 +22,7 @@ import Search from '../components/SearchBar'
 import Postcode from '@actbase/react-daum-postcode';
 
 const Match = ({navigation}) => {
-
+    const [id, setId] = useState('');
     const [size, setSize] = useState(false);
     const tSwitch1 = () => setSize(previousState => !previousState);
 
@@ -29,6 +31,38 @@ const Match = ({navigation}) => {
 
     const [agree, setAgree] = useState(false);
     const tSwitch3 = () => setAgree(previousState => !previousState);
+
+    const matchSend = async (): Promise<void> => {
+        try {
+                axios.post("http://10.0.2.2:8080/api/matching", {
+                    memberId: id, trashSize: size, trashOwn: trashCan, address: addr
+                })
+                  .then(response => {
+                      console.log(response.data);
+
+                  })
+                  .catch(error => {
+                    console.error(error);
+                  });
+
+              } catch (err) {
+                console.error('login err', err);
+              }
+    };
+
+    useEffect(() => {
+          const getId = async () => {
+              const idData = await AsyncStorage.getItem("id");
+              console.log(JSON.stringify(await AsyncStorage.getItem("id")));
+              if(idData) {
+                  setId(idData);
+              }
+          }
+
+          getId();
+
+
+      }, []);
 
     return (
         <View style={styles.container}>
@@ -87,10 +121,9 @@ const Match = ({navigation}) => {
                     onSelected={(data)=>this.getAddressData(data)}
                 />
 
-
                 <TouchableOpacity
                     style={styles.btn}
-                    onPress={() => navigation.navigate('Chat')}>
+                    onPress={() => {matchSend();}}>
                     <Text style={(styles.Text, {color: 'white'})}>매칭 시작</Text>
                 </TouchableOpacity>
             </ScrollView>
