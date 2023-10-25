@@ -3,18 +3,21 @@ package foodwasting.server.service;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
+import java.lang.Long;
+import java.lang.Integer;
+
 import java.util.ArrayList;
 
 @Getter
 @Service
 public class NodeService implements Comparable<NodeService> {
-    long[] axes;
+    Long[] axes;
     NodeService left, right; // left, right, parent
-    long d;
-    int idx, state; // root-axes distance , 방문한 분기점 idx 0 = left, 1 = right, 2 = leaf 노드
-    ArrayList<NodeService> group = new ArrayList<NodeService>();
+    Long uId, d;
+    Integer idx, state; // root-axes distance , 방문한 분기점 idx 0 = left, 1 = right, 2 = leaf 노드
+    ArrayList<UsrNodeService> group = new ArrayList<UsrNodeService>();
 
-    public NodeService(long[] arr) {
+    protected NodeService(Long[] arr) {
         this.axes = arr;
         this.left = this.right = null;
         this.d = 999999999999l;
@@ -35,3 +38,4 @@ public class NodeService implements Comparable<NodeService> {
         return 0;
     }
 }
+
