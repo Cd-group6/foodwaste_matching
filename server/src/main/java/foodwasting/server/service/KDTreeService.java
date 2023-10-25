@@ -12,17 +12,17 @@ public final class KDTreeService {
     static final Integer k = 2; // 2 dimensional
     // depth = 0
 
-    private NodeService newNode(Long[] arr, Long uId) {
+    private NodeService newNode(double[] arr, Long uId) {
         NodeService node = new NodeService(arr);
         node.uId = uId;
         return node;
     }
 
-    public NodeService insert(NodeService root, Long[] axes, Long uId) {
+    public NodeService insert(NodeService root, double[] axes, Long uId) {
         return insertTr(root, axes, uId, 0l);
     }
 
-    private NodeService insertTr(NodeService root, Long[] axes, Long uId, Long depth) {
+    private NodeService insertTr(NodeService root, double[] axes, Long uId, Long depth) {
         if (root == null) { // if tree is empty
             return newNode(axes, uId);
         } else {
@@ -38,7 +38,7 @@ public final class KDTreeService {
         }
     }
 
-    private boolean areaxesSame(Long[] axes1, Long[] axes2) {
+    private boolean areaxesSame(double[] axes1, double[] axes2) {
 
         for (Integer i = 0; i < k; i++) {
             if (axes1[i] != axes2[i]) {
@@ -85,11 +85,11 @@ public final class KDTreeService {
         return min;
     }
 
-    private NodeService deleteNode(NodeService root, Long[] axes) {
+    private NodeService deleteNode(NodeService root, double[] axes) {
         return deleteNodeRec(root, axes, 0l);
     }
 
-    private NodeService deleteNodeRec(NodeService root, Long[] axes, Long depth) {
+    private NodeService deleteNodeRec(NodeService root, double[] axes, Long depth) {
         if (root == null) {
             return null;
         }
@@ -121,10 +121,32 @@ public final class KDTreeService {
 
     }
 
-    private NodeService searchNode(NodeService root, NodeService best, Long[] axes, Long depth, PriorityQueue<NodeService> q) {
+    private double haversine(double lat1, double lon1, double lat2, double lon2) {
+        // 위도와 경도를 라디안으로 변환
+        lat1 = Math.toRadians(lat1);
+        lon1 = Math.toRadians(lon1);
+        lat2 = Math.toRadians(lat2);
+        lon2 = Math.toRadians(lon2);
+
+        System.out.println("l1 : " + lat1);
+        System.out.println("l1 : " + lat2);
+        System.out.println("l1 : " + lon1);
+        System.out.println("l1 : " + lon2);
+        // Haversine 공식 계산
+        double dlat = lat2 - lat1;
+        double dlon = lon2 - lon1;
+        double a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        // 지구의 반지름 (킬로미터)
+        double R = 6371.0;
+        double distance = R * c;
+
+        return distance;
+    }
+
+    private NodeService searchNode(NodeService root, NodeService best, double[] axes, Long depth, PriorityQueue<NodeService> q) {
         root.idx = 2; // it means leaf
-        root.d = (long) Math.pow((double) root.axes[0] - (double) axes[0], 2)
-                + (long) Math.pow((double) root.axes[1] - (double) axes[1], 2);
+        root.d = haversine(root.axes[0], root.axes[1], axes[0], axes[1]);
         q.add(root);
 
         if (best.d > root.d) { // root -> best
@@ -155,15 +177,15 @@ public final class KDTreeService {
 
     }
 
-    public NodeService nearest(NodeService root, Long[] axes) {
-        NodeService best = newNode(new Long[]{0l, 0l,}, null);
+    public NodeService nearest(NodeService root, double[] axes) {
+        NodeService best = newNode(new double[]{0l, 0l,}, null);
         PriorityQueue<NodeService> q = new PriorityQueue<>();
 
         // reset
         return nearestNeighbor(root, best, axes, 0l, q);
     }
 
-    private NodeService nearestNeighbor(NodeService root, NodeService best, Long[] axes, Long depth, PriorityQueue<NodeService> q) {
+    private NodeService nearestNeighbor(NodeService root, NodeService best, double[] axes, Long depth, PriorityQueue<NodeService> q) {
         Integer cd = Math.toIntExact(depth % k);
 
         best = searchNode(root, best, axes, depth, q); // search로 들어가면서 axes와의 distance를 계산해 저장해 그것을 기반으로 queue에 저장
