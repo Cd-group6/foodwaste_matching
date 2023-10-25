@@ -43,6 +43,9 @@ dependencies {
 	implementation 'org.webjars.bower:vue:2.5.16'
 	implementation 'org.webjars.bower:axios:0.17.1'
 	implementation 'com.google.code.gson:gson:2.8.0'
+
+	// jackson
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
 }
 
 tasks.named('test') {

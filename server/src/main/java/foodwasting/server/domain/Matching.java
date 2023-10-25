@@ -20,8 +20,8 @@ public class Matching {
 
     private String address;
 
-    private Long latitude;
-    private Long longitude;
+    private Double latitude;
+    private Double longitude;
 
     private Integer size;
     private Boolean trashOwn;
