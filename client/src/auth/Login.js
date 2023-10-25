@@ -68,6 +68,7 @@ const Login = ({navigation}) => {
         await AsyncStorage.setItem('name',JSON.stringify(profile.nickname));
         await AsyncStorage.setItem('email',JSON.stringify(profile.email));
         await AsyncStorage.setItem('imgURL',JSON.stringify(profile.thumbnailImageUrl));
+        setImgURL(JSON.stringify(profile.thumbnailImageUrl));
 
         console.log(JSON.stringify(await AsyncStorage.getItem('id')));
 
@@ -140,10 +141,12 @@ const Login = ({navigation}) => {
                         onPress={() => {signInWithKakao();}}>
                         <Text style={styles.btnText}>카카오로 로그인</Text>
                     </TouchableOpacity>
+
                     <TouchableOpacity style={styles.btn}
                          onPress={() => {signOutWithKakao();}}>
                         <Text style={styles.btnText}>로그아웃</Text>
                     </TouchableOpacity>
+
 
 
 
