@@ -57,7 +57,7 @@ public class MatchingController {
             logger.info(String.valueOf(result.get(1).getUId()));
             logger.info(String.valueOf(best1.getUId()));
 
-            matchedService.matched(best1.getUId(), result.get(0).getUId(), result.get(1).getUId());
+//            matchedService.matched(best1.getUId(), result.get(0).getUId(), result.get(1).getUId());
             // 저장
         }
 
