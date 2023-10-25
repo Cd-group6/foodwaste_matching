@@ -30,6 +30,7 @@
     "react-native-screens": "^3.20.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-webview": "^13.6.2",
+    "react-use-websocket": "^4.5.0",
     "styled-components": "^5.3.11"
   },
   "devDependencies": {
@@ -55,5 +56,4 @@
   "jest": {
     "preset": "react-native"
   }
-
 }

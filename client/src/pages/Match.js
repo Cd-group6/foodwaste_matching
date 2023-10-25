@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import React from "react";
-import { useState,useEffect} from 'react';
+import { useState,useEffect, useRef} from 'react';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -22,7 +22,8 @@ import Search from '../components/SearchBar'
 import Postcode from '@actbase/react-daum-postcode';
 
 const Match = ({navigation}) => {
-
+    const webSocket = useRef(null);
+    //const ws = new WebSocket('ws://10.0.2.2:8080/ws/chat');
     const [size, setSize] = useState(false);
     const tSwitch1 = () => setSize(previousState => !previousState);
 
@@ -68,20 +69,41 @@ const Match = ({navigation}) => {
                     console.error('login err', err);
                   }
         };
+        {/*const sendMessage = async (): Promise<void> => {
+                    try {
+                            let str = JSON.stringify({type: "ENTER" , roomId: "30969992-5649-4760-9a2b-95ec0767b2fb", sender: "1", message: ""});
+                            webSocket.current.send(str).then(response => {console.log(response.data); })
+                              .catch(error => {
+                                console.error(error);
+                              });
 
-    useEffect(() => {
-          const getId = async () => {
-              const idData = await AsyncStorage.getItem("id");
-              console.log(JSON.stringify(await AsyncStorage.getItem("id")));
-              if(idData) {
-                  setId(idData);
-              }
-          }
-
-          getId();
+                          } catch (err) {
+                            console.error('login err', err);
+                          }
+                };*/}
+        const sendMessage = () => {
+            let str = JSON.stringify({type: "ENTER" , roomId: "30969992-5649-4760-9a2b-95ec0767b2fb", sender: "1", message: ""});
+            webSocket.current.send(str);
+        };
 
 
-      }, []);
+
+
+        useEffect(() => {
+            webSocket.current = new WebSocket('ws://10.0.2.2:8080/ws/chat');
+            const getId = async () => {
+                const idData = await AsyncStorage.getItem("id");
+
+                if(idData) {
+                    setId(idData);
+                }
+            }
+
+            getId();
+            webSocket.current.onopen = () => {
+              console.log("ok");
+            };
+        }, []);
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
@@ -180,6 +202,13 @@ const Match = ({navigation}) => {
                     onPress={() => {makeRoom();}}>
                     <Text style={(styles.Text, {color: 'white'})}>방만들기</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.btn}
+                    onPress={() => {sendMessage();}}>
+                    <Text style={(styles.Text, {color: 'white'})}>메세지 보내기</Text>
+                </TouchableOpacity>
+
             </ScrollView>
         </View>
     );

@@ -29,7 +29,7 @@ public class MatchingController {
 
         Long matchingId = matchingService.matching(request);
 
-        Long[][] axes = {{3l, 6l}, {17l, 15l}, {13l, 15l}, {6l, 12l},
+        double[][] axes = {{3l, 6l}, {17l, 15l}, {13l, 15l}, {6l, 12l},
                 {9l, 1l}, {2l, 7l}, {10l, 19l}};
         Long[] uid = {1l, 2l, 3l, 4l, 5l, 6l, 7l};
 
@@ -37,11 +37,11 @@ public class MatchingController {
             root = kdTreeService.insert(root, axes[i], uid[i]);
         }
 
-        Long[] u1 = {10l, 11l};
+        double[] u1 = {10l, 11l};
         Long uid1 = 1l;
         UsrNodeService user1 = new UsrNodeService(uid1, u1);
 
-        Long[] u2 = {8l, 9l};
+        double[] u2 = {8l, 9l};
         Long uid2 = 3l;
         UsrNodeService user2 = new UsrNodeService(uid2, u2);
 
