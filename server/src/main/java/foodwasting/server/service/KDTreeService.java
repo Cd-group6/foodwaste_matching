@@ -127,8 +127,6 @@ public final class KDTreeService {
                 + (long) Math.pow((double) root.axes[1] - (double) axes[1], 2);
         q.add(root);
 
-        System.out.println("x : " + root.axes[0] + " y : " + root.axes[1]);
-
         if (best.d > root.d) { // root -> best
             best = root;
         }
