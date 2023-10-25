@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 
 public class UsrNodeService {
     Long uId;
-    double[] axes;
+    Double[] axes;
 
 
     protected UsrNodeService(){
     }
-    public UsrNodeService(Long uId, double[] arr) {
+    public UsrNodeService(Long uId, Double[] arr) {
         this.uId = uId;
         this.axes = arr;
     }

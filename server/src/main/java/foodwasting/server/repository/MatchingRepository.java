@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MatchingRepository extends JpaRepository<Matching, Long> {
+
+    Double findLongitudeById(Long id);
+
+    Double findLatitudeById(Long id);
 }

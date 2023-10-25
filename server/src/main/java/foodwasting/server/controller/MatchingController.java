@@ -2,6 +2,7 @@ package foodwasting.server.controller;
 
 import foodwasting.server.dto.CreateMatchingRequest;
 import foodwasting.server.dto.CreateMatchingResponse;
+import foodwasting.server.repository.MemberRepository;
 import foodwasting.server.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ public class MatchingController {
 
     private final MatchingService matchingService;
     private final MatchedService matchedService;
+    private final MemberService memberService;
     private final KDTreeService kdTreeService;
     private NodeService root = null;
 
@@ -29,19 +31,24 @@ public class MatchingController {
 
         Long matchingId = matchingService.matching(request);
 
-        double[][] axes = {{3l, 6l}, {17l, 15l}, {13l, 15l}, {6l, 12l},
-                {9l, 1l}, {2l, 7l}, {10l, 19l}};
+        Double longitude = matchingService.findLongitude(1L);
+        Double latitude = matchingService.findLatitude(1L);
+
+        System.out.println("latitude = " + latitude);
+
+        Double[][] axes = {{3.0, 6.0}, {17.0, 15.0}, {13.0, 15.0}, {6.0, 12.0},
+                {9.0, 1.0}, {2.0, 7.0}, {10.0, 19.0}};
         Long[] uid = {1l, 2l, 3l, 4l, 5l, 6l, 7l};
 
         for (int i = 0; i < 7; i++) {
             root = kdTreeService.insert(root, axes[i], uid[i]);
         }
 
-        double[] u1 = {10l, 11l};
+        Double[] u1 = {10.0, 11.0};
         Long uid1 = 1l;
         UsrNodeService user1 = new UsrNodeService(uid1, u1);
 
-        double[] u2 = {8l, 9l};
+        Double[] u2 = {8.0, 9.0};
         Long uid2 = 3l;
         UsrNodeService user2 = new UsrNodeService(uid2, u2);
 
@@ -61,6 +68,6 @@ public class MatchingController {
             // 저장
         }
 
-        return new CreateMatchingResponse(matchingId);
+        return null;
     }
 }
