@@ -178,7 +178,10 @@ public final class KDTreeService {
     }
 
     public NodeService nearest(NodeService root, Double[] axes) {
-        NodeService best = newNode(new Double[]{0.0, 0.0,}, null);
+        if (root == null) {
+            return null;
+        }
+        NodeService best = newNode(new Double[]{0.0, 0.0,}, 0l);
         PriorityQueue<NodeService> q = new PriorityQueue<>();
 
         // reset
@@ -189,6 +192,10 @@ public final class KDTreeService {
         Integer cd = Math.toIntExact(depth % k);
 
         best = searchNode(root, best, axes, depth, q); // search로 들어가면서 axes와의 distance를 계산해 저장해 그것을 기반으로 queue에 저장
+
+        if (best.uId == 0l) {
+            return null;
+        }
 
         while (!q.isEmpty()) { // 역으로 올라가기
             NodeService node = q.poll();
