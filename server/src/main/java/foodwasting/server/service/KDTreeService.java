@@ -121,7 +121,7 @@ public final class KDTreeService {
 
     }
 
-    private double haversine(Double lat1, Double lon1, Double lat2, Double lon2) {
+    private Long haversine(Double lat1, Double lon1, Double lat2, Double lon2) {
         // 위도와 경도를 라디안으로 변환
         lat1 = Math.toRadians(lat1);
         lon1 = Math.toRadians(lon1);
@@ -139,7 +139,7 @@ public final class KDTreeService {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         // 지구의 반지름 (킬로미터)
         double R = 6371.0;
-        double distance = R * c;
+        Long distance = (long) Math.floor(R * c * 1000);
 
         return distance;
     }
@@ -200,7 +200,7 @@ public final class KDTreeService {
         while (!q.isEmpty()) { // 역으로 올라가기
             NodeService node = q.poll();
 
-            if (node.d <= 2) { // stop
+            if (node.d <= 100) { // stop
                 best = node;
                 break;
             }
@@ -226,6 +226,9 @@ public final class KDTreeService {
     }
 
     public ArrayList<UsrNodeService> findGroup(NodeService root, NodeService best, UsrNodeService s) {
+        if (best.d > 200) {
+
+        }
         if ((best != null) && (best.state <= 2)) {
             best.state++;
             best.group.add(s);
