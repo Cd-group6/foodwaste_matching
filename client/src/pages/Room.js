@@ -16,18 +16,11 @@ const user = {
   name: 'Developer',
 }
 
-const otherUser = {
-  _id: 2,
-  name: 'React Native',
-  avatar: Logo,
-}
-
 const ActionKind = {
   SEND_MESSAGE : 'SEND_MESSAGE',
   LOAD_EARLIER_MESSAGES : 'LOAD_EARLIER_MESSAGES',
   LOAD_EARLIER_START : 'LOAD_EARLIER_START',
   SET_IS_TYPING : 'SET_IS_TYPING',
-  // LOAD_EARLIER_END = 'LOAD_EARLIER_END',
 }
 
 interface StateAction {
@@ -92,15 +85,7 @@ const Room = () => {
       [dispatch, state.messages],
     )
 
-    const parsePatterns = useCallback((_linkStyle: any) => {
-      return [
-        {
-          pattern: /#(\w+)/,
-          style: { textDecorationLine: 'underline', color: 'darkorange' },
-          onPress: () => Linking.openURL('http://gifted.chat'),
-        },
-      ]
-    }, [])
+
 
     const onLongPressAvatar = useCallback((pressedUser: any) => {
       Alert.alert(JSON.stringify(pressedUser))
@@ -110,34 +95,7 @@ const Room = () => {
       Alert.alert('On avatar press')
     }, [])
 
-    const onQuickReply = useCallback((replies: any[]) => {
-      const createdAt = new Date()
-      if (replies.length === 1) {
-        onSend([
-          {
-            createdAt,
-            _id: Math.round(Math.random() * 1000000),
-            text: replies[0].title,
-            user,
-          },
-        ])
-      } else if (replies.length > 1) {
-        onSend([
-          {
-            createdAt,
-            _id: Math.round(Math.random() * 1000000),
-            text: replies.map(reply => reply.title).join(', '),
-            user,
-          },
-        ])
-      } else {
-        console.warn('replies param is not set correctly')
-      }
-    }, [])
 
-    const renderQuickReplySend = useCallback(() => {
-      return <Text>{' custom send =>'}</Text>
-    }, [])
 
     const setIsTyping = useCallback(
       (isTyping: boolean) => {
@@ -191,26 +149,16 @@ const Room = () => {
               onSend={onSend}
               loadEarlier={state.loadEarlier}
               isLoadingEarlier={state.isLoadingEarlier}
-              parsePatterns={parsePatterns}
               user={user}
               scrollToBottom
               onLongPressAvatar={onLongPressAvatar}
-              onPressAvatar={onPressAvatar}
-              onQuickReply={onQuickReply}
-              quickReplyStyle={{ borderRadius: 2 }}
-              quickReplyTextStyle={{
-                fontWeight: '200',
-              }}
-              renderQuickReplySend={renderQuickReplySend}
+              onPressAvatar={onPressAvatar}renderUsernameOnMessage={true}
               renderSystemMessage={renderSystemMessage}
-              /*renderSend={renderSend}*/
               keyboardShouldPersistTaps='never'
               timeTextStyle={{
-                left: { color: 'red' },
-                right: { color: 'yellow' },
+                left: { color: 'black' },
+                right: { color: 'black' },
               }}
-              isTyping={state.isTyping}
-              inverted={Platform.OS !== 'web'}
               infiniteScroll
             />
           </View>
