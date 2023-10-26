@@ -7,14 +7,18 @@ import foodwasting.server.repository.ChatMessageRepository;
 import foodwasting.server.repository.ChatRoomRepository;
 import foodwasting.server.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
+
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/chatRoom")
+@Slf4j
 public class ChatRoomController {
 
     private final ChatRoomRepository chatRoomRepository;
@@ -38,16 +42,34 @@ public class ChatRoomController {
         return cs.createChatRoom(member1, member2, member3);
     }
 
+    @PostMapping("/checkmatched")
+    public List<ChatRoomEntity> testMatched(@RequestParam String myName) {
+        List<ChatRoomEntity> resultMatched = null;
+        if (!chatRoomRepository.findByMember1(myName).isEmpty()) {
+            log.info("if 1");
+            return resultMatched =chatRoomRepository.findByMember1(myName);
+        }
+        else if (!chatRoomRepository.findByMember2(myName).isEmpty()) {
+            log.info("if 2");
+            return resultMatched =chatRoomRepository.findByMember2(myName);
+        }
+        else if (!chatRoomRepository.findByMember3(myName).isEmpty()) {
+            log.info("if 3");
+            return resultMatched = chatRoomRepository.findByMember3(myName);
+        }
+        return resultMatched;
+    }
+
     @PostMapping("/rooms/{MemberName}")
     public List<ChatRoomEntity> rooms(@RequestParam String MemberName){
         List<ChatRoomEntity> result = null;
-        if(chatRoomRepository.findByMember1(MemberName) != null){
+        if(!chatRoomRepository.findByMember1(MemberName).isEmpty()){
             result = chatRoomRepository.findByMember1(MemberName);
         }
-        if(chatRoomRepository.findByMember2(MemberName) != null){
+        if(!chatRoomRepository.findByMember2(MemberName).isEmpty()){
             result = chatRoomRepository.findByMember2(MemberName);
         }
-        if(chatRoomRepository.findByMember3(MemberName) != null){
+        if(chatRoomRepository.findByMember3(MemberName).isEmpty()){
             result = chatRoomRepository.findByMember3(MemberName);
         }
         return result;

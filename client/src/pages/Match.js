@@ -15,6 +15,7 @@ import {
     TouchableOpacity,
     Switch,
     TextInput,
+    ActivityIndicator,
     } from 'react-native';
 import {theme} from "../colors.js";
 import Search from '../components/SearchBar'
@@ -22,6 +23,9 @@ import Search from '../components/SearchBar'
 import Postcode from '@actbase/react-daum-postcode';
 
 const Match = ({navigation}) => {
+
+    const[animating,setAnimating]=useState(true);
+
     const webSocket = useRef(null);
     //const ws = new WebSocket('ws://10.0.2.2:8080/ws/chat');
     const [size, setSize] = useState(false);
@@ -37,57 +41,40 @@ const Match = ({navigation}) => {
     const [addr, setAddr] = useState('');
     const [extraAddr, setExtraAddr] = useState('');
     const [id, setId] = useState('');
+    const [roomId, setRoomId] = useState('');
     const matchSend = async (): Promise<void> => {
         try {
-                axios.post("http://10.0.2.2:8080/api/matching", {
-                    memberId: id, trashSize: size, trashOwn: trashCan, address: addr
-                })
-                  .then(response => {
-                      console.log(response.data);
+               axios.post("http://10.0.2.2:8080/api/matching", {
+                   memberId: id, trashSize: size, trashOwn: trashCan, address: addr
+               })
+                 .then(response => {
+                     console.log(response.data);
+                 })
+                 .catch(error => {
+                   console.error(error);
+                 });
 
-                  })
-                  .catch(error => {
-                    console.error(error);
-                  });
+               const timer = setInterval(() => {
+                if(animating){
+                   axios.post("http://10.0.2.2:8080/chatRoom/checkmatched?myName="+id).then(response => {
+                        setRoomId(JSON.stringify(response.data[0].roomId));
+                        console.log({roomId});
+                   }).catch(error => {
+                     console.error(error);
+                   });
+                   console.log('aa');
+                   }else{clearInterval(timer);
+                    setAnimating(true);
+                   }
+               }, 3000);
 
-              } catch (err) {
-                console.error('login err', err);
-              }
+
+
+
+             } catch (err) {
+               console.error('login err', err);
+             }
     };
-     const makeRoom = async (): Promise<void> => {
-            try {
-                    axios.post("http://10.0.2.2:8080/chat?name=asdf")
-                      .then(response => {
-                          console.log(response.data.roomId);
-
-                      })
-                      .catch(error => {
-                        console.error(error);
-                      });
-
-                  } catch (err) {
-                    console.error('login err', err);
-                  }
-        };
-        {/*const sendMessage = async (): Promise<void> => {
-                    try {
-                            let str = JSON.stringify({type: "ENTER" , roomId: "30969992-5649-4760-9a2b-95ec0767b2fb", sender: "1", message: ""});
-                            webSocket.current.send(str).then(response => {console.log(response.data); })
-                              .catch(error => {
-                                console.error(error);
-                              });
-
-                          } catch (err) {
-                            console.error('login err', err);
-                          }
-                };*/}
-        const sendMessage = () => {
-            let str = JSON.stringify({type: "ENTER" , roomId: "30969992-5649-4760-9a2b-95ec0767b2fb", sender: "1", message: ""});
-            webSocket.current.send(str);
-        };
-
-
-
 
         useEffect(() => {
             webSocket.current = new WebSocket('ws://10.0.2.2:8080/ws/chat');
@@ -189,25 +176,18 @@ const Match = ({navigation}) => {
                       </Text>
                     </View>
 
-
-
+                <ActivityIndicator
+                  animating={!animating}
+                  color="#D0747D"
+                  size="large"
+                  style={styles.activityIndicator}
+                />
+                {animating &&
                 <TouchableOpacity
                     style={styles.btn}
-                    onPress={() => {matchSend();}}>
+                    onPress={() => {setAnimating(false); matchSend();} }>
                     <Text style={(styles.Text, {color: 'white'})}>매칭 시작</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.btn}
-                    onPress={() => {makeRoom();}}>
-                    <Text style={(styles.Text, {color: 'white'})}>방만들기</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.btn}
-                    onPress={() => {sendMessage();}}>
-                    <Text style={(styles.Text, {color: 'white'})}>메세지 보내기</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>}
 
             </ScrollView>
         </View>
@@ -288,6 +268,11 @@ const styles = StyleSheet.create({
             alignItems: 'center',
             backgroundColor: theme.mainC,
             marginTop: wp(16),
+       },
+       activityIndicator: {
+         alignItems: 'center',
+         height: 80,
+         marginTop:10,
        },
 });
 export  default Match
