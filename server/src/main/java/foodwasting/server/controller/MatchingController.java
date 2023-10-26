@@ -24,7 +24,7 @@ public class MatchingController {
 
     private final MatchingService matchingService;
     private final MatchedService matchedService;
-    private final MemberService memberService;
+    private final ChatRoomService chatRoomService;
     private final KDTreeService kdTreeService;
     private final MatchingRepository matchingRepository;
     private NodeService root = null;
@@ -36,7 +36,7 @@ public class MatchingController {
 
         Long matchingId = matchingService.matching(request);
 
-        Matching matching = matchingRepository.findById(request.getMemberId()).get();
+        Matching matching = matchingRepository.findById(matchingId).get();
         Double latitude = matching.getLatitude();
         Double longitude = matching.getLongitude();
 
@@ -58,8 +58,10 @@ public class MatchingController {
         }
 
         if (result != null) {
+            Matching owner = matchingRepository.findByMemberId(best1.getUId()).get();
 
-            matchedService.matched(best1.getUId(), result.get(0).getUId(), result.get(1).getUId());
+            matchedService.matched(best1.getUId(), result.get(0).getUId(), result.get(1).getUId(), owner.getAddress());
+            chatRoomService.createChatRoom(best1.getUId().toString(), result.get(0).getUId().toString(), result.get(1).getUId().toString());
             // 저장
             return new CreateMatchingResponse(request.getMemberId());
 

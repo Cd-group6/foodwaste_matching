@@ -4,10 +4,10 @@ import foodwasting.server.domain.Matching;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface MatchingRepository extends JpaRepository<Matching, Long> {
 
-    Double findLongitudeById(Long id);
-
-    Double findLatitudeById(Long id);
+    Optional<Matching> findByMemberId(Long memberId);
 }

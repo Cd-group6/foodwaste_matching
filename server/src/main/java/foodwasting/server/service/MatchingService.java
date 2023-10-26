@@ -32,15 +32,6 @@ public class MatchingService {
     private final  MatchedRepository matchedRepository;
     private Matching matching;
 
-
-    public Double findLatitude(Long id) {
-        return matchingRepository.findLatitudeById(id);
-    }
-
-    public Double findLongitude(Long id) {
-        return matchingRepository.findLongitudeById(id);
-    }
-
     @Transactional
     public Long matching(CreateMatchingRequest request) {
 
