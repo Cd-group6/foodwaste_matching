@@ -39,7 +39,7 @@ const HomeStackScreen = () => {
             <HomeStack.Screen
                 name="Room"
                 component={Room}
-                options={{headerShown: false}}/>
+                options={{title: '', headerShown: true}}/>
 
         </HomeStack.Navigator>
     );
