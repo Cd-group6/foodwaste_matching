@@ -13,8 +13,7 @@ import java.util.ArrayList;
 public class NodeService implements Comparable<NodeService> {
     Double[] axes;
     NodeService left, right; // left, right, parent
-    Long uId;
-    double d;
+    Long uId, d;
     Integer idx, state; // root-axes distance , 방문한 분기점 idx 0 = left, 1 = right, 2 = leaf 노드
     ArrayList<UsrNodeService> group = new ArrayList<UsrNodeService>();
 
