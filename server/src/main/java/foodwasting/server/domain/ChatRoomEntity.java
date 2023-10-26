@@ -32,8 +32,11 @@ public class ChatRoomEntity {
     @JoinColumn(name = "member3_name")
     private String member3;
 
+    /*
     @OneToMany(mappedBy = "chatRoomEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessageEntity> chatMessageEntityList = new ArrayList<>();
+
+     */
 
     public static ChatRoomEntity toChatRoomEntity(ChatRoomDTO chatRoomDTO){
         ChatRoomEntity chatRoomEntity = new ChatRoomEntity();

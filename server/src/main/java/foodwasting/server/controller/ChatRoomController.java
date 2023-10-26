@@ -38,6 +38,21 @@ public class ChatRoomController {
         return cs.createChatRoom(member1, member2, member3);
     }
 
+    @PostMapping("/checkmatched")
+    public List<ChatRoomEntity> testMatched(@RequestParam String myName) {
+        List<ChatRoomEntity> resultMatched = null;
+        if (chatRoomRepository.findByMember1(myName) != null) {
+            resultMatched =chatRoomRepository.findByMember1(myName);
+        }
+        if (chatRoomRepository.findByMember2(myName) != null) {
+            resultMatched =chatRoomRepository.findByMember2(myName);
+        }
+        if (chatRoomRepository.findByMember3(myName) != null) {
+            resultMatched = chatRoomRepository.findByMember3(myName);
+        }
+        return resultMatched = chatRoomRepository.findByMember1(myName);
+    }
+
     @PostMapping("/rooms/{MemberName}")
     public List<ChatRoomEntity> rooms(@RequestParam String MemberName){
         List<ChatRoomEntity> result = null;
