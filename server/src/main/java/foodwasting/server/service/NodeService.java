@@ -20,12 +20,19 @@ public class NodeService implements Comparable<NodeService> {
     protected NodeService(Double[] arr) {
         this.axes = arr;
         this.left = this.right = null;
-        this.d = 999999999999l;
+        this.d = Long.MAX_VALUE;
         this.state = 0; // 2-> match / others wait
     }
 
     public double getDistance() {
         return this.d;
+    }
+
+    public NodeService withinRange() {
+        if (this.d > 2000) {
+            return this;
+        }
+        return null;
     }
 
     @Override
