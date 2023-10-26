@@ -12,6 +12,7 @@ import foodwasting.server.dto.ChatDTO;
 import foodwasting.server.dto.ChatRoom;
 import foodwasting.server.service.ChatService;
 
+/*
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -35,3 +36,5 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         room.handleAction(session, chatMessage, service);
     }
 }
+
+ */

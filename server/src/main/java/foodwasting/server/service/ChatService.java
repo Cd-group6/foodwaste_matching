@@ -1,8 +1,10 @@
 package foodwasting.server.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import foodwasting.server.dto.ChatRoomDTO;
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -15,43 +17,26 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.*;
 
-@Slf4j
-@Data
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class ChatService {
-    private final ObjectMapper mapper;
-    private Map<String, ChatRoom> chatRooms;
+    private final ObjectMapper objectMapper;
+    private Map<String, ChatRoomDTO> chatRoomDTOs;
 
     @PostConstruct
     private void init(){
-        chatRooms = new LinkedHashMap<>();
+        chatRoomDTOs = new LinkedHashMap<>();
     }
 
-    public List<ChatRoom> findAllRoom() {
-        return new ArrayList<>(chatRooms.values());
-    }
-    public ChatRoom findRoomById(String roomId){
-        return chatRooms.get(roomId);
-    }
-    public ChatRoom createRoom(String name) {
-        //roomId값 랜덤 생성
-        String roomId = UUID.randomUUID().toString();
 
-        ChatRoom room = ChatRoom.builder()
-                .roomId(roomId)
-                .name(name)
-                .build();
 
-        chatRooms.put(roomId, room);
-        return room;
-    }
 
     public <T> void sendMessage(WebSocketSession session, T message){
         try{
-            session.sendMessage(new TextMessage(mapper.writeValueAsString(message)));
+            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
     }
-
 }

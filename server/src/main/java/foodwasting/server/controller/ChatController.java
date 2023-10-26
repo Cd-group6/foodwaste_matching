@@ -1,7 +1,12 @@
 package foodwasting.server.controller;
 
+import foodwasting.server.domain.ChatMessageEntity;
+import foodwasting.server.dto.MessageDTO;
+import foodwasting.server.repository.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import foodwasting.server.dto.ChatRoom;
 import foodwasting.server.service.ChatService;
@@ -10,19 +15,18 @@ import java.util.List;
 
 // 경로/chat으로 설정함 근데? ws/localhost:8080/chat이 경로
 @RestController
-@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/chat")
 public class ChatController {
-    private final ChatService service;
+    private final ChatService chatService;
+    private final SimpMessagingTemplate template;
+    private final ChatMessageRepository chatMessageRepository;
 
-    @PostMapping
-    public ChatRoom createRoom(@RequestParam String name) {
-        return service.createRoom(name);
-    }
+    @MessageMapping(value = "/chat/message")
+    public void message(MessageDTO message){
 
-    @GetMapping
-    public List<ChatRoom> findAllRooms() {
-        return service.findAllRoom();
+        ChatMessageEntity messageSave = ChatMessageEntity.toChatMessageEntity(message);
+        chatMessageRepository.save(messageSave);
+        template.convertAndSend("/sub/chatRoom/" + message.getRoomId(), message);
     }
 }
