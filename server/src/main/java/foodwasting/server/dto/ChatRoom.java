@@ -28,6 +28,7 @@ public class ChatRoom {
     public void handleAction(WebSocketSession session, ChatDTO message, ChatService service) {
         // message type 확인, get type에 따라 ENTER or TALK에 맞는 메세지 샌딩
         if (message.getType().equals(ChatDTO.MessageType.ENTER)) {
+
             //sessions에 세션 추가
             sessions.add(session);
             //입장 메세지 출력

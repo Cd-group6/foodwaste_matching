@@ -11,8 +11,8 @@ public class ChatDTO {
         ENTER, TALK
     }
 
-    private MessageType type; //
-    private String roomId;
+    private MessageType type; //ENTER 냐 TALK 냐 상황 구분
+    private String roomId; //service.Chatservice.java에서 난수 설정해줌
     private String sender; //채팅 보낸사람 ID
     private String message;
     private String time;
