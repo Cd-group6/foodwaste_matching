@@ -14,7 +14,7 @@ export default [
     createdAt: new Date(),
     user: {
       _id: 2,
-      name: 'Developer',
+      name: '1',
     },
   },
   {
@@ -23,7 +23,7 @@ export default [
     createdAt: new Date(),
     user: {
       _id: 3,
-      name: 'Developer',
+      name: '통',
     },
   },
   {
@@ -32,7 +32,7 @@ export default [
     createdAt: new Date(),
     user: {
       _id: 1,
-      name: 'React Native',
+      name: 'Developer',
     },
   },
 

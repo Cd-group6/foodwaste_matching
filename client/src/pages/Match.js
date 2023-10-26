@@ -15,6 +15,7 @@ import {
     TouchableOpacity,
     Switch,
     TextInput,
+    ActivityIndicator,
     } from 'react-native';
 import {theme} from "../colors.js";
 import Search from '../components/SearchBar'
@@ -22,6 +23,9 @@ import Search from '../components/SearchBar'
 import Postcode from '@actbase/react-daum-postcode';
 
 const Match = ({navigation}) => {
+
+    const[animating,setAnimating]=useState(true);
+
     const webSocket = useRef(null);
     //const ws = new WebSocket('ws://10.0.2.2:8080/ws/chat');
     const [size, setSize] = useState(false);
@@ -39,21 +43,35 @@ const Match = ({navigation}) => {
     const [id, setId] = useState('');
     const matchSend = async (): Promise<void> => {
         try {
-                axios.post("http://10.0.2.2:8080/api/matching", {
-                    memberId: id, trashSize: size, trashOwn: trashCan, address: addr
-                })
-                  .then(response => {
-                      console.log(response.data);
+               axios.post("http://10.0.2.2:8080/api/matching", {
+                   memberId: id, trashSize: size, trashOwn: trashCan, address: addr
+               })
+                 .then(response => {
+                     console.log(response.data);
+                 })
+                 .catch(error => {
+                   console.error(error);
+                 });
 
-                  })
-                  .catch(error => {
-                    console.error(error);
-                  });
+               const timer = setInterval(() => {
+                   axios.post("http://10.0.2.2:8080/api/matching", {
+                       memberId: id, trashSize: size, trashOwn: trashCan, address: addr
+                   }).then(response => {
+                       console.log(response.data);
+                   }).catch(error => {
+                     console.error(error);
+                   });
+                   console.log('aa');
+               }, 3000);
 
-              } catch (err) {
-                console.error('login err', err);
-              }
+
+
+
+             } catch (err) {
+               console.error('login err', err);
+             }
     };
+
      const makeRoom = async (): Promise<void> => {
             try {
                     axios.post("http://10.0.2.2:8080/chat?name=asdf")
@@ -189,13 +207,18 @@ const Match = ({navigation}) => {
                       </Text>
                     </View>
 
-
-
+                <ActivityIndicator
+                  animating={!animating}
+                  color="#D0747D"
+                  size="large"
+                  style={styles.activityIndicator}
+                />
+                {animating &&
                 <TouchableOpacity
                     style={styles.btn}
-                    onPress={() => {matchSend();}}>
+                    onPress={() => {setAnimating(false); matchSend();} }>
                     <Text style={(styles.Text, {color: 'white'})}>매칭 시작</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>}
 
                 <TouchableOpacity
                     style={styles.btn}
@@ -288,6 +311,11 @@ const styles = StyleSheet.create({
             alignItems: 'center',
             backgroundColor: theme.mainC,
             marginTop: wp(16),
+       },
+       activityIndicator: {
+         alignItems: 'center',
+         height: 80,
+         marginTop:10,
        },
 });
 export  default Match
