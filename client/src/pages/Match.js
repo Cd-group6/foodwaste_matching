@@ -57,7 +57,9 @@ const Match = ({navigation}) => {
                const timer = setInterval(() => {
                 if(animating){
                    axios.post("http://10.0.2.2:8080/chatRoom/checkmatched?myName="+id).then(response => {
-                        setRoomId(JSON.stringify(response.data[0].roomId));
+                        AsyncStorage.setItem('roomId',JSON.stringify(response.data[0].roomId));
+                        /*setRoomId(JSON.stringify(response.data[0].roomId));*/
+                        console.log(JSON.stringify(response.data[0].roomId));
                         console.log({roomId});
                    }).catch(error => {
                      console.error(error);

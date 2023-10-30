@@ -1,8 +1,10 @@
 import ResultView from '../auth/IntroView';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import * as StompJs from "@stomp/stompjs";
+import * as encoding from 'text-encoding';
+import SockJS from "sockjs-client";
 import React from "react";
-import { useState,useEffect, useCallback} from 'react';
+import { useState,useEffect, useCallback, useRef} from 'react';
 import {
     StyleSheet,
     Text,
@@ -17,11 +19,58 @@ import Search from '../components/SearchBar'
 
 const Home = ({navigation}) => {
     const [boxes, setBoxes] = useState([]);
-
     const addBox = () => {
       const newBox = <View key={boxes.length} style={styles.box1}></View>;
       setBoxes([...boxes, newBox]);
     };
+
+    /*
+    const connectHandler = () => {
+      clicent.current = Stomp.over(() => {
+        const sock = new SockJS("http://10.0.2.2:8080/stomp/chat")
+        return sock;
+      });
+      client.current.connect(
+        {
+    	  Authorization: token
+        },
+        () => {
+          client.current.subscribe(
+         	'/sub/chatRoom/chat/{구독하고 싶은 방의 id}',
+            (message) => {
+              setMessage({type:, roomId:, sendMessage: });
+            },
+            {}
+          );
+        }
+      );
+    };
+    */
+    const connect = () => {
+        // 소켓 연결
+        try {
+          const clientData = new StompJs.Client({
+            brokerURL: "ws://10.0.2.2:8080/stomp/chat",
+            connectHeaders: {},
+            debug: function (str) {
+              console.log(str);
+            },
+            reconnectDelay: 5000, // 자동 재 연결
+            heartbeatIncoming: 4000,
+            heartbeatOutgoing: 4000,
+          });
+          console.log("구독 직전");
+          clientData.onConnect = function () {
+             clientData.subscribe("/sub/message/" + 'cc00573f-8116-48c7-896f-7b2795670a1a', callback);
+           };
+
+           clientData.activate(); // 클라이언트 활성화
+           //changeClient(clientData); // 클라이언트 갱신
+         } catch (err) {
+           console.log(err);
+         }
+       };
+
 
     const [accessToken, setAccessToken] = useState(true);
     const [name, setName] = useState('');
@@ -55,7 +104,7 @@ const Home = ({navigation}) => {
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.room}>
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Room')}>
+                    <TouchableOpacity style={styles.button} onPress={() => {connect(); navigation.navigate('Room');}}>
                         <Text style={styles.textm}>채팅방</Text>
                     </TouchableOpacity>
                 </View>
