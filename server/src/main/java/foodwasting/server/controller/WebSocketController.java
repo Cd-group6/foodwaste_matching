@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class WebSocketController {
+    /*
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/chatting")
     public void sendMessage(ChatDTO chatDTO, SimpMessageHeaderAccessor accessor  ) {
         simpMessagingTemplate.convertAndSend("/sub/chatting" + chatDTO.getRoomId(), chatDTO);
     }
+
+     */
 }
