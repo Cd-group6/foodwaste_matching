@@ -17,6 +17,8 @@ import {
 import {theme} from "../colors.js";
 import Search from '../components/SearchBar'
 
+//const Stomp =require('stompjs');
+
 const Home = ({navigation}) => {
     const [boxes, setBoxes] = useState([]);
     const addBox = () => {
@@ -24,34 +26,12 @@ const Home = ({navigation}) => {
       setBoxes([...boxes, newBox]);
     };
 
-    /*
-    const connectHandler = () => {
-      clicent.current = Stomp.over(() => {
-        const sock = new SockJS("http://10.0.2.2:8080/stomp/chat")
-        return sock;
-      });
-      client.current.connect(
-        {
-    	  Authorization: token
-        },
-        () => {
-          client.current.subscribe(
-         	'/sub/chatRoom/chat/{구독하고 싶은 방의 id}',
-            (message) => {
-              setMessage({type:, roomId:, sendMessage: });
-            },
-            {}
-          );
-        }
-      );
-    };
-    */
-    const connect = () => {
+    {/*const connect = () => {
         // 소켓 연결
         try {
           const clientData = new StompJs.Client({
             brokerURL: "ws://10.0.2.2:8080/stomp/chat",
-            connectHeaders: {},
+
             debug: function (str) {
               console.log(str);
             },
@@ -61,7 +41,7 @@ const Home = ({navigation}) => {
           });
           console.log("구독 직전");
           clientData.onConnect = function () {
-             clientData.subscribe("/sub/message/" + 'cc00573f-8116-48c7-896f-7b2795670a1a', callback);
+             clientData.subscribe("/sub/message/" + "cc00573f-8116-48c7-896f-7b2795670a1a", callback);
            };
 
            clientData.activate(); // 클라이언트 활성화
@@ -69,8 +49,23 @@ const Home = ({navigation}) => {
          } catch (err) {
            console.log(err);
          }
-       };
+       };*/}
+    const client = useRef({});
 
+    const connect = () => {
+      client.current = new StompJs.Client({
+        brokerURL: 'ws://10.0.2.2:8080/stomp/chat',
+        onConnect: () => {
+          console.log('success');
+          subscribe();
+        },
+      });
+      client.current.activate();
+    };
+
+
+    //var sock = new SockJS('http://10.0.2.2:8080/stomp/chat');
+    //let client = Stomp.over(sock);
 
     const [accessToken, setAccessToken] = useState(true);
     const [name, setName] = useState('');
@@ -82,6 +77,19 @@ const Home = ({navigation}) => {
         }
 
         getName();
+
+        {/*client.connect({}, () =>{
+            console.log('Connected : ' );
+            client.send("/sub/join", {},JSON.stringify('1'))
+
+                // Create Message
+
+                client.send('/sub/message/${cc00573f-8116-48c7-896f-7b2795670a1a}',{},
+                JSON.stringify({"type":"TALK","roomId":"cc00573f-8116-48c7-896f-7b2795670a1","sender":"1","message":"hihi"}))
+
+
+        })*/}
+
 
 
     }, []);
