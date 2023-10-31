@@ -28,8 +28,11 @@ public class ChatController {
 
     private static Set<String> userList = new HashSet<>();
 
+    /*
     @Autowired
     private final SimpMessagingTemplate template;
+
+
 
     @MessageMapping(value = "/message/{roomId}")
     public void message(@Payload MessageDTO message, @DestinationVariable String roomId){
@@ -38,6 +41,8 @@ public class ChatController {
         chatMessageRepository.save(messageSave);
         template.convertAndSend("/sub/chatRoom/" + roomId, message);
     }
+
+     */
 
     @MessageMapping("/join")
     public void joinUser(@Payload String userId){
