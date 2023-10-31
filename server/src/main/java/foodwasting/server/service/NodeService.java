@@ -29,7 +29,7 @@ public class NodeService implements Comparable<NodeService> {
     }
 
     public NodeService withinRange() {
-        if (this.d > 2000) {
+        if (this.d <= 200) {
             return this;
         }
         return null;
