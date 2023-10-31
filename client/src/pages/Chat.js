@@ -54,7 +54,7 @@ const Home = ({navigation}) => {
 
     const connect = () => {
       client.current = new StompJs.Client({
-        brokerURL: 'ws://10.0.2.2:8080/stomp/chat',
+        brokerURL: 'ws://10.0.2.2:8080/ws',
         onConnect: () => {
           console.log('success');
           subscribe();
