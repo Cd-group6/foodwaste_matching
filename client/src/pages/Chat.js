@@ -26,6 +26,13 @@ const Home = ({navigation}) => {
       setBoxes([...boxes, newBox]);
     };
 
+    const ws = useRef(null);
+    ws.current = new WebSocket('ws://10.0.2.2:8080/stomp/chat');
+    console.log(ws.current);
+    ws.current.onopen = () => {
+        console.log('connected')
+    };
+
     {/*const connect = () => {
         // 소켓 연결
         try {
@@ -50,22 +57,6 @@ const Home = ({navigation}) => {
            console.log(err);
          }
        };*/}
-    const client = useRef({});
-
-    const connect = () => {
-      client.current = new StompJs.Client({
-        brokerURL: 'ws://10.0.2.2:8080/ws',
-        onConnect: () => {
-          console.log('success');
-          subscribe();
-        },
-      });
-      client.current.activate();
-    };
-
-
-    //var sock = new SockJS('http://10.0.2.2:8080/stomp/chat');
-    //let client = Stomp.over(sock);
 
     const [accessToken, setAccessToken] = useState(true);
     const [name, setName] = useState('');
@@ -77,20 +68,6 @@ const Home = ({navigation}) => {
         }
 
         getName();
-
-        {/*client.connect({}, () =>{
-            console.log('Connected : ' );
-            client.send("/sub/join", {},JSON.stringify('1'))
-
-                // Create Message
-
-                client.send('/sub/message/${cc00573f-8116-48c7-896f-7b2795670a1a}',{},
-                JSON.stringify({"type":"TALK","roomId":"cc00573f-8116-48c7-896f-7b2795670a1","sender":"1","message":"hihi"}))
-
-
-        })*/}
-
-
 
     }, []);
 
@@ -112,7 +89,7 @@ const Home = ({navigation}) => {
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.room}>
-                    <TouchableOpacity style={styles.button} onPress={() => {connect(); navigation.navigate('Room');}}>
+                    <TouchableOpacity style={styles.button} onPress={() => {ws.current.onopen(); navigation.navigate('Room');}}>
                         <Text style={styles.textm}>채팅방</Text>
                     </TouchableOpacity>
                 </View>
