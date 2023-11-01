@@ -74,8 +74,12 @@ public class MatchingController {
 
                     matchedService.matched(best1.getUId(), result.get(0).getUId(), result.get(1).getUId(), owner.getAddress());
                     chatRoomService.createChatRoom(best1.getUId().toString(), result.get(0).getUId().toString(), result.get(1).getUId().toString());
-                    return new CreateMatchingResponse(request.getMemberId());
+                    while (!tempQueue.isEmpty()) {
+                        log.info("paste");
 
+                        queue.add(tempQueue.poll());
+                    }
+                    return new CreateMatchingResponse(request.getMemberId());
                 }
             }
             while (!tempQueue.isEmpty()) {
@@ -113,6 +117,11 @@ public class MatchingController {
 
             matchedService.matched(best1.getUId(), result.get(0).getUId(), result.get(1).getUId(), owner.getAddress());
             chatRoomService.createChatRoom(best1.getUId().toString(), result.get(0).getUId().toString(), result.get(1).getUId().toString());
+            while (!tempQueue.isEmpty()) {
+                log.info("paste");
+
+                queue.add(tempQueue.poll());
+            }
             return new CreateMatchingResponse(request.getMemberId());
 
         }
