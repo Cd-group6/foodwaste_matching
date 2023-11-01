@@ -1,6 +1,10 @@
 package foodwasting.server.dto;
 
 import lombok.*;
+import org.springframework.web.socket.WebSocketSession;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Getter
@@ -14,4 +18,6 @@ public class ChatRoomDTO {
     private String member1;
     private String member2;
     private String member3;
+
+    private final Set<WebSocketSession> sessions = new HashSet<>();
 }
