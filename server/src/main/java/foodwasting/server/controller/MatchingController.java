@@ -71,9 +71,12 @@ public class MatchingController {
                 if (result != null) {
                     root = kdTreeService.deleteNode(root, best1.getAxes());
                     Matching owner = matchingRepository.findByMemberId(best1.getUId()).get();
+                    Matching user1 = matchingRepository.findByMemberId(result.get(0).getUId()).get();
+                    Matching user2 = matchingRepository.findByMemberId(result.get(1).getUId()).get();
 
                     matchedService.matched(best1.getUId(), result.get(0).getUId(), result.get(1).getUId(), owner.getAddress());
                     chatRoomService.createChatRoom(best1.getUId().toString(), result.get(0).getUId().toString(), result.get(1).getUId().toString());
+                    log.info("username={}", user1.getMember().getName());
                     return new CreateMatchingResponse(request.getMemberId());
 
                 }
