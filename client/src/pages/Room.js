@@ -294,7 +294,7 @@ const Room=()=> {
               const message = JSON.parse(e.data);
 
               var sentMessages = {
-                _id: cntt,
+                _id: message.chat_id,
                 text: message.message,
                 createdAt: new Date(),
                 user:{
@@ -312,9 +312,6 @@ const Room=()=> {
         let sendingEnter = JSON.stringify({type: "ENTER", roomId: room.replaceAll("\"", "") , sender: id , message:"" });
         ws.current.send(sendingEnter);
         setCnt(cnt+1);
-    };
-    const sendMessage = () => {
-
     };
     return (
         <View style={styles.container}>
