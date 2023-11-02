@@ -54,7 +54,7 @@ const Login = ({navigation}) => {
         setToken(JSON.stringify(token));
         await AsyncStorage.setItem('accessToken', JSON.stringify(token));
         const profile = await getKakaoProfile();
-        axios.post("http://10.0.2.2:8080/api/members", {
+        axios.post("http://34.64.146.16:8080/api/members", {
             name: profile.nickname, email: profile.email
         })
           .then(response => {
