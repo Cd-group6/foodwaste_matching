@@ -45,7 +45,7 @@ const Match = ({navigation}) => {
     const [roomId, setRoomId] = useState('');
     const matchSend = async (): Promise<void> => {
         try {
-               axios.post("http://10.0.2.2:8080/api/matching", {
+               axios.post("http://34.64.146.16:8080/api/matching", {
                    memberId: id, trashSize: size, trashOwn: trashCan, address: addr
                })
                  .then(response => {
@@ -59,7 +59,7 @@ const Match = ({navigation}) => {
                var timer = setInterval(() => {
                 console.log({aa});
                 if(aa){
-                   axios.post("http://10.0.2.2:8080/chatRoom/checkmatched?myName="+id).then(response => {
+                   axios.post("http://34.64.146.16:8080/chatRoom/checkmatched?myName="+id).then(response => {
                         AsyncStorage.setItem('roomId',JSON.stringify(response.data[0].roomId));
                         setRoomId(JSON.stringify(response.data[0].roomId));
                         console.log(JSON.stringify(response.data[0].roomId));

@@ -69,6 +69,7 @@ const Home = ({navigation}) => {
     const [name, setName] = useState('');
     const [imgURL, setImgURL] = useState('');
     const [cnt, setCnt] = useState(0);
+    const [room, setRoom] = useState('');
     /*
     useEffect(() => {
         console.log('send1')
@@ -89,6 +90,14 @@ const Home = ({navigation}) => {
 
     }, []);
 
+    useEffect(() => {
+            const getRoom = async () => {
+                setRoom(await AsyncStorage.getItem("roomId"));
+            }
+            getRoom();
+            console.log({room});
+    }, []);
+
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
@@ -107,7 +116,7 @@ const Home = ({navigation}) => {
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.room}>
-                    <TouchableOpacity style={styles.button} onPress={() => {navigation.navigate('Room')}}>
+                    <TouchableOpacity style={styles.button} onPress={() => {if(room){navigation.navigate('Room')}}}>
                         <Text style={styles.textm}>채팅방</Text>
                     </TouchableOpacity>
                 </View>
