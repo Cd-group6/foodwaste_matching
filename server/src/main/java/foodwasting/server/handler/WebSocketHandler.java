@@ -53,13 +53,13 @@ public class WebSocketHandler extends TextWebSocketHandler {
         Set<WebSocketSession> sessions = room.getSessions();
         if (messageDTO.getType().equals(MessageType.ENTER)) {
             sessions.add(session);
-            messageDTO.setMessage(messageDTO.getSender() + "is enter");
+            sendedMessage.setMessage(sendedMessage.getSender() + "is enter");
 
             sendToEachSocket(sessions, new TextMessage(objectMapper.writeValueAsString(sendedMessage)));
 
         }else if (messageDTO.getType().equals(MessageType.QUIT)) {
             sessions.remove(session);
-            messageDTO.setMessage(messageDTO.getSender() + "is QUIT");
+            sendedMessage.setMessage(sendedMessage.getSender() + "is QUIT");
             sendToEachSocket(sessions, new TextMessage(objectMapper.writeValueAsString(sendedMessage)));
         }else {
             sendToEachSocket(sessions, new TextMessage(objectMapper.writeValueAsString(sendedMessage)));
