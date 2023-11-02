@@ -1,11 +1,9 @@
 package foodwasting.server.controller;
 
 import foodwasting.server.domain.Matching;
-import foodwasting.server.domain.Member;
 import foodwasting.server.dto.CreateMatchingRequest;
 import foodwasting.server.dto.CreateMatchingResponse;
 import foodwasting.server.repository.MatchingRepository;
-import foodwasting.server.repository.MemberRepository;
 import foodwasting.server.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -38,6 +34,7 @@ public class MatchingController {
 
         Long matchingId = matchingService.matching(request);
         Long timeStamp = System.currentTimeMillis();
+        log.info("Saved matching request time");
 
         Matching matching = matchingRepository.findById(matchingId).get();
         Double latitude = matching.getLatitude();
@@ -51,8 +48,10 @@ public class MatchingController {
         PriorityQueue<UsrNodeService> tempQueue = new PriorityQueue<>(timeComparator);
 
         if (request.getTrashOwn()) {
+            log.info("Inserting trashOwner into a KDTree");
             root = kdTreeService.insert(root, axes, uid);
 
+            log.info("Searching for trashUsers within range");
             while (!queue.isEmpty()) {
                 UsrNodeService node = queue.poll();
                 best1 = kdTreeService.nearest(root, node.getAxes());
@@ -61,7 +60,6 @@ public class MatchingController {
                     best1 = best1.withinRange();
                 }
                 if (best1 == null) {
-                    log.info("add123");
                     tempQueue.add(node);
                     continue;
                 }
@@ -69,27 +67,26 @@ public class MatchingController {
                 result = kdTreeService.findGroup(root, best1, node);
 
                 if (result != null) {
+                    log.info("Found Group");
                     root = kdTreeService.deleteNode(root, best1.getAxes());
+                    log.info("Delete TrashOwner from KDTree");
                     Matching owner = matchingRepository.findByMemberId(best1.getUId()).get();
-
                     matchedService.matched(best1.getUId(), result.get(0).getUId(), result.get(1).getUId(), owner.getAddress());
                     chatRoomService.createChatRoom(best1.getUId().toString(), result.get(0).getUId().toString(), result.get(1).getUId().toString());
                     while (!tempQueue.isEmpty()) {
-                        log.info("paste");
-
                         queue.add(tempQueue.poll());
                     }
                     return new CreateMatchingResponse(request.getMemberId());
                 }
             }
+            log.info("Need more trashUsr");
+            log.info("Waiting for trashUsers within range");
             while (!tempQueue.isEmpty()) {
-                log.info("paste");
-
                 queue.add(tempQueue.poll());
             }
 
-            log.info(root.toString());
         } else if (!request.getTrashOwn()) {
+            log.info("Searching for trashOwner within range");
             UsrNodeService user1 = new UsrNodeService(uid, axes, timeStamp);
             best1 = kdTreeService.nearest(root, user1.getAxes());
 
@@ -97,34 +94,26 @@ public class MatchingController {
                 best1 = best1.withinRange();
             }
             if (best1 == null) {
-                log.info("add q");
+                log.info("No nearby trashOwner found");
                 queue.add(user1);
             }
 
-            log.info("best = {}", best1);
-
-            Iterator iter = queue.iterator();
-            while (iter.hasNext()) {
-                log.info("queue = {}", iter.next());
-            }
-
             result = kdTreeService.findGroup(root, best1, user1);
-        }
-
-        if (result != null) {
-            root = kdTreeService.deleteNode(root, best1.getAxes());
-            Matching owner = matchingRepository.findByMemberId(best1.getUId()).get();
-
-            matchedService.matched(best1.getUId(), result.get(0).getUId(), result.get(1).getUId(), owner.getAddress());
-            chatRoomService.createChatRoom(best1.getUId().toString(), result.get(0).getUId().toString(), result.get(1).getUId().toString());
-            while (!tempQueue.isEmpty()) {
-                log.info("paste");
-
-                queue.add(tempQueue.poll());
+            if (result != null) {
+                log.info("Found Group");
+                root = kdTreeService.deleteNode(root, best1.getAxes());
+                log.info("Delete TrashOwner from KDTree");
+                Matching owner = matchingRepository.findByMemberId(best1.getUId()).get();
+                matchedService.matched(best1.getUId(), result.get(0).getUId(), result.get(1).getUId(), owner.getAddress());
+                chatRoomService.createChatRoom(best1.getUId().toString(), result.get(0).getUId().toString(), result.get(1).getUId().toString());
+                while (!tempQueue.isEmpty()) {
+                    queue.add(tempQueue.poll());
+                }
+                return new CreateMatchingResponse(request.getMemberId());
             }
-            return new CreateMatchingResponse(request.getMemberId());
-
+            log.info("Waiting in the queue");
         }
+
 
         return null;
     }
