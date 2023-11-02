@@ -16,7 +16,7 @@ public class MatchedService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long matched(Long ownerId, Long user1Id, Long user2Id) {
+    public Long matched(Long ownerId, Long user1Id, Long user2Id, String address) {
 
         Member owner = memberRepository.findById(ownerId).get();
         Member user1 = memberRepository.findById(user1Id).get();
@@ -26,6 +26,7 @@ public class MatchedService {
                 .owner(owner)
                 .user1(user1)
                 .user2(user2)
+                .address(address)
                 .build();
 
         matchedRepository.save(matched);
