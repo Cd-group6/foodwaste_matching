@@ -53,7 +53,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         Set<WebSocketSession> sessions = room.getSessions();
         if (messageDTO.getType().equals(MessageType.ENTER)) {
             sessions.add(session);
-            sendedMessage.setMessage(sendedMessage.getSender() + "is enter");
+            sendedMessage.setMessage(sendedMessage.getSenderName() + "is enter");
 
             sendToEachSocket(sessions, new TextMessage(objectMapper.writeValueAsString(sendedMessage)));
 
