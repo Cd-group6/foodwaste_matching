@@ -25,6 +25,7 @@ import Postcode from '@actbase/react-daum-postcode';
 const Match = ({navigation}) => {
 
     const[animating,setAnimating]=useState(true);
+    const[aa,setAa]=useState(true);
 
     const webSocket = useRef(null);
     //const ws = new WebSocket('ws://10.0.2.2:8080/ws/chat');
@@ -54,20 +55,26 @@ const Match = ({navigation}) => {
                    console.error(error);
                  });
 
-               const timer = setInterval(() => {
-                if(animating){
+
+               var timer = setInterval(() => {
+                console.log({aa});
+                if(aa){
                    axios.post("http://10.0.2.2:8080/chatRoom/checkmatched?myName="+id).then(response => {
                         AsyncStorage.setItem('roomId',JSON.stringify(response.data[0].roomId));
-                        /*setRoomId(JSON.stringify(response.data[0].roomId));*/
+                        setRoomId(JSON.stringify(response.data[0].roomId));
                         console.log(JSON.stringify(response.data[0].roomId));
-                        console.log({roomId});
+                        if(response.data[0]){
+                            clearInterval(timer);
+                            setAnimating(true);
+                        }
                    }).catch(error => {
                      console.error(error);
                    });
-                   console.log('aa');
-                   }else{clearInterval(timer);
+
+                   }/*else{
                     setAnimating(true);
-                   }
+                    clearInterval(timer);
+                   }*/
                }, 3000);
 
 
@@ -79,7 +86,6 @@ const Match = ({navigation}) => {
     };
 
         useEffect(() => {
-            webSocket.current = new WebSocket('ws://10.0.2.2:8080/ws/chat');
             const getId = async () => {
                 const idData = await AsyncStorage.getItem("id");
 
@@ -89,9 +95,6 @@ const Match = ({navigation}) => {
             }
 
             getId();
-            webSocket.current.onopen = () => {
-              console.log("ok");
-            };
         }, []);
     return (
         <View style={styles.container}>
