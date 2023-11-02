@@ -1,8 +1,10 @@
 import ResultView from '../auth/IntroView';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import * as StompJs from "@stomp/stompjs";
+import * as encoding from 'text-encoding';
+import SockJS from "sockjs-client";
 import React from "react";
-import { useState,useEffect, useCallback} from 'react';
+import { useState,useEffect, useCallback, useRef} from 'react';
 import {
     StyleSheet,
     Text,
@@ -13,19 +15,71 @@ import {
     Image,
     } from 'react-native';
 import {theme} from "../colors.js";
-import Search from '../components/SearchBar'
+import Search from '../components/SearchBar';
 
 const Home = ({navigation}) => {
     const [boxes, setBoxes] = useState([]);
-
     const addBox = () => {
       const newBox = <View key={boxes.length} style={styles.box1}></View>;
       setBoxes([...boxes, newBox]);
     };
 
+    //const ws = useRef(null);
+    //ws.current = new WebSocket('ws://10.0.2.2:8080/ws/chat');
+    //console.log(ws.current);
+    /*
+    const openS = () =>{
+        ws.current.onopen = () => {
+            console.log('connected')
+        };
+        ws.current.onopen();
+    };*/
+    /*
+    const [str1, setStr1] = useState('');
+    const [str2, setStr2] = useState('');
+    */
+    /*const sendMessage1 = () => {
+        setStr1(JSON.stringify({
+            type:"ENTER",
+            roomId:"2cb62d96-09a4-4ca3-a9d4-7f95be0b694a",
+            sender:"1",
+            message:""
+        }))
+        console.log('1E');
+        ws.current.send(str1);
+        console.log('2E');
+        setCnt(cnt+1);
+        console.log({cnt});
+    };
+    const sendMessage2 = () => {
+        setStr2(JSON.stringify({
+            type:"TALK",
+            roomId:"2cb62d96-09a4-4ca3-a9d4-7f95be0b694a",
+            sender:"1",
+            message:"hihi"
+        }))
+        console.log('1T');
+        ws.current.send(str2);
+        console.log('2T');
+        setCnt(cnt+1);
+        console.log({cnt});
+    };
+    */
     const [accessToken, setAccessToken] = useState(true);
     const [name, setName] = useState('');
     const [imgURL, setImgURL] = useState('');
+    const [cnt, setCnt] = useState(0);
+    const [room, setRoom] = useState('');
+    /*
+    useEffect(() => {
+        console.log('send1')
+        ws.current.onmessage = e => {
+          const message = JSON.parse(e.data);
+          console.log(message.message);
+        };
+        console.log('send2')
+
+    }, [cnt]);*/
     useEffect(() => {
         const getName = async () => {
             setImgURL(await AsyncStorage.getItem("imgURL"));
@@ -34,7 +88,14 @@ const Home = ({navigation}) => {
 
         getName();
 
+    }, []);
 
+    useEffect(() => {
+            const getRoom = async () => {
+                setRoom(await AsyncStorage.getItem("roomId"));
+            }
+            getRoom();
+            console.log({room});
     }, []);
 
     return (
@@ -55,10 +116,20 @@ const Home = ({navigation}) => {
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.room}>
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Room')}>
+                    <TouchableOpacity style={styles.button} onPress={() => {if(room){navigation.navigate('Room')}}}>
                         <Text style={styles.textm}>채팅방</Text>
                     </TouchableOpacity>
                 </View>
+                {/*<View style={styles.room}>
+                    <TouchableOpacity style={styles.button} onPress={() => {sendMessage1()}}>
+                        <Text style={styles.textm}>보내기1</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.room}>
+                    <TouchableOpacity style={styles.button} onPress={() => {sendMessage2()}}>
+                        <Text style={styles.textm}>보내기2</Text>
+                    </TouchableOpacity>
+                </View>*/}
 
                 <View style={styles.container1}>
                   <TouchableOpacity onPress={addBox}>
