@@ -26,7 +26,7 @@ public class ChatRoomController {
     private final ChatRoomService cs;
 
     @PostMapping("/roomtest")
-    public ChatRoomDTO testMatch(@RequestParam String member1, @RequestParam String member2, @RequestParam String member3){
+    public ChatRoomDTO testMatch(@RequestParam String member1, @RequestParam String member2, @RequestParam String member3,@RequestParam String member1Name, @RequestParam String member2Name, @RequestParam String member3Name, @RequestParam String adress){
         String randomRoomId = UUID.randomUUID().toString();
 
         String name = member1 + "님의 방";
@@ -37,9 +37,19 @@ public class ChatRoomController {
                 .member1(member1)
                 .member2(member2)
                 .member3(member3)
+                .member1Name(member1Name)
+                .member2Name(member2Name)
+                .member3Name(member3Name)
+                .adress(adress)
                 .build();
 
-        return cs.createChatRoom(member1, member2, member3);
+        return cs.createChatRoom(member1, member2, member3, member1Name, member2Name, member3Name, adress);
+    }
+
+    @PostMapping("/recall")
+    public List<ChatMessageEntity> recallmessage(@RequestParam String roomId) {
+        List<ChatMessageEntity> recallm = chatMessageRepository.findAllByRoomId(roomId);
+        return recallm;
     }
 
     @PostMapping("/checkmatched")

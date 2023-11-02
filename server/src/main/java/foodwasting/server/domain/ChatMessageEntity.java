@@ -34,7 +34,11 @@ public class ChatMessageEntity {
     @Column
     private MessageType messageType;
 
+    @Column
     private String sender;
+
+    @Column
+    private String senderName;
 
     @Column
     private String message;
@@ -52,6 +56,8 @@ public class ChatMessageEntity {
         chatMessageEntity.setRoomId(messageDTO.getRoomId());
         chatMessageEntity.setSender(messageDTO.getSender());
         chatMessageEntity.setMessage(messageDTO.getMessage());
+
+        chatMessageEntity.setSenderName(messageDTO.getSenderName());
 
         return chatMessageEntity;
     }

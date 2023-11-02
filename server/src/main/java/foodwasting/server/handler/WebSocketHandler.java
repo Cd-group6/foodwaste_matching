@@ -1,12 +1,14 @@
 package foodwasting.server.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import foodwasting.server.domain.ChatMessageEntity;
 import foodwasting.server.domain.ChatRoomEntity;
 import foodwasting.server.domain.MessageType;
 import foodwasting.server.dto.ChatDTO;
 import foodwasting.server.dto.ChatRoomDTO;
 import foodwasting.server.dto.MessageDTO;
 import foodwasting.server.model.ChatMessage;
+import foodwasting.server.repository.ChatMessageRepository;
 import foodwasting.server.repository.ChatRoomRepository;
 import foodwasting.server.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private static List<WebSocketSession> list = new ArrayList<>();
 
     private final ChatRoomService chatRoomService;
+    private final ChatMessageRepository chatMessageRepository;
 
 
     @Override
@@ -44,20 +47,22 @@ public class WebSocketHandler extends TextWebSocketHandler {
         //yolang
         MessageDTO messageDTO = objectMapper.readValue(payload, MessageDTO.class);
         ChatRoomDTO room = chatRoomService.findRoomById(messageDTO.getRoomId());
+        ChatMessageEntity sendedMessage = ChatMessageEntity.toChatMessageEntity(messageDTO);
+        chatMessageRepository.save(sendedMessage);
 
         Set<WebSocketSession> sessions = room.getSessions();
         if (messageDTO.getType().equals(MessageType.ENTER)) {
             sessions.add(session);
-            messageDTO.setMessage(messageDTO.getSender() + "is enter");
+            sendedMessage.setMessage(sendedMessage.getSender() + "is enter");
 
-            sendToEachSocket(sessions, new TextMessage(objectMapper.writeValueAsString(messageDTO)));
+            sendToEachSocket(sessions, new TextMessage(objectMapper.writeValueAsString(sendedMessage)));
 
         }else if (messageDTO.getType().equals(MessageType.QUIT)) {
             sessions.remove(session);
-            messageDTO.setMessage(messageDTO.getSender() + "is QUIT");
-            sendToEachSocket(sessions, new TextMessage(objectMapper.writeValueAsString(messageDTO)));
+            sendedMessage.setMessage(sendedMessage.getSender() + "is QUIT");
+            sendToEachSocket(sessions, new TextMessage(objectMapper.writeValueAsString(sendedMessage)));
         }else {
-            sendToEachSocket(sessions,message);
+            sendToEachSocket(sessions, new TextMessage(objectMapper.writeValueAsString(sendedMessage)));
         }
     }
     private void sendToEachSocket(Set<WebSocketSession> sessions, TextMessage message) {
