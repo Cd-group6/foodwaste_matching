@@ -37,7 +37,7 @@ public class ChatRoomService {
 
 
 
-    public ChatRoomDTO createChatRoom(String member1, String member2, String member3) {
+    public ChatRoomDTO createChatRoom(String member1, String member2, String member3, String member1Name, String member2Name, String member3Name, String adress) {
         String randomRoomId = UUID.randomUUID().toString();
 
         String name = member1 + "님의 방";
@@ -48,6 +48,10 @@ public class ChatRoomService {
                 .member1(member1)
                 .member2(member2)
                 .member3(member3)
+                .member1Name(member1Name)
+                .member2Name(member2Name)
+                .member3Name(member3Name)
+                .adress(adress)
                 .build();
         chatRooms.put(room.getRoomId(), room);
 
@@ -58,8 +62,9 @@ public class ChatRoomService {
         MessageDTO joinMessage = MessageDTO.builder()
                 .type(MessageType.ENTER)
                 .roomId(room.getRoomId())
-                .sender("join comment")
-                .message(name + "에 입장하셨습니다")
+                .sender("adress")
+                .senderName("ADRESS")
+                .message("쓰레기통 주소는" + adress)
                 .build();
         ChatMessageEntity joinMessageSave = ChatMessageEntity.toChatMessageEntity(joinMessage);
         chatMessageRepository.save(joinMessageSave);
