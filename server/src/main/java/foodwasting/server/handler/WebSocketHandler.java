@@ -48,7 +48,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         MessageDTO messageDTO = objectMapper.readValue(payload, MessageDTO.class);
         ChatRoomDTO room = chatRoomService.findRoomById(messageDTO.getRoomId());
         ChatMessageEntity sendedMessage = ChatMessageEntity.toChatMessageEntity(messageDTO);
-        chatMessageRepository.save(sendedMessage);
+
 
         Set<WebSocketSession> sessions = room.getSessions();
         if (messageDTO.getType().equals(MessageType.ENTER)) {
@@ -64,6 +64,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         }else {
             sendToEachSocket(sessions, new TextMessage(objectMapper.writeValueAsString(sendedMessage)));
         }
+        chatMessageRepository.save(sendedMessage);
     }
     private void sendToEachSocket(Set<WebSocketSession> sessions, TextMessage message) {
         sessions.parallelStream().forEach( roomSession ->{

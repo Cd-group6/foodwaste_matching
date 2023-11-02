@@ -19,6 +19,9 @@ public class MessageDTO {
     private MessageType type;
     private String roomId;
     private String sender;
+
+    private String senderName;
+
     private String message;
     private LocalDateTime sendTime;
 }

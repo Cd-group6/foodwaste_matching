@@ -23,14 +23,26 @@ public class ChatRoomEntity {
     @Column
     private String roomName;
 
-    @JoinColumn(name = "member1_name")
+    @JoinColumn(name = "member1_id")
     private String member1;
 
-    @JoinColumn(name = "member2_name")
+    @JoinColumn(name = "member2_id")
     private String member2;
 
-    @JoinColumn(name = "member3_name")
+    @JoinColumn(name = "member3_id")
     private String member3;
+
+    @JoinColumn(name = "member1_name")
+    private String member1Name;
+
+    @JoinColumn(name = "member2_name")
+    private String member2Name;
+
+    @JoinColumn(name = "member3_name")
+    private String member3Name;
+
+    @Column
+    private String adress;
 
     /*
     @OneToMany(mappedBy = "chatRoomEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -46,6 +58,11 @@ public class ChatRoomEntity {
         chatRoomEntity.setMember1(chatRoomDTO.getMember1());
         chatRoomEntity.setMember2(chatRoomDTO.getMember2());
         chatRoomEntity.setMember3(chatRoomDTO.getMember3());
+
+        chatRoomEntity.setMember1Name(chatRoomDTO.getMember1Name());
+        chatRoomEntity.setMember2Name(chatRoomDTO.getMember2Name());
+        chatRoomEntity.setMember3Name(chatRoomDTO.getMember3Name());
+        chatRoomEntity.setAdress(chatRoomDTO.getAdress());
 
         return chatRoomEntity;
     }

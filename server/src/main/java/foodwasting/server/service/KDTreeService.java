@@ -239,13 +239,13 @@ public final class KDTreeService {
         if (best.d > 200) {
             return null;
         }
+        log.info("Found");
         if (best.state <= 2){
             best.state++;
             best.group.add(s);
             if (best.state == 2) {
                 return best.group;
             }
-
         }
         return null;
     }
