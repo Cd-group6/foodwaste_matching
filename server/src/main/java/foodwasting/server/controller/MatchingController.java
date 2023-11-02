@@ -70,12 +70,18 @@ public class MatchingController {
                     log.info("Found Group");
                     root = kdTreeService.deleteNode(root, best1.getAxes());
                     log.info("Delete TrashOwner from KDTree");
+
                     Matching owner = matchingRepository.findByMemberId(best1.getUId()).get();
+                    Matching user1 = matchingRepository.findByMemberId(result.get(0).getUId()).get();
+                    Matching user2 = matchingRepository.findByMemberId(result.get(1).getUId()).get();
+
                     matchedService.matched(best1.getUId(), result.get(0).getUId(), result.get(1).getUId(), owner.getAddress());
-                    chatRoomService.createChatRoom(best1.getUId().toString(), result.get(0).getUId().toString(), result.get(1).getUId().toString());
+                    chatRoomService.createChatRoom(best1.getUId().toString(), result.get(0).getUId().toString(), result.get(1).getUId().toString(),
+                            owner.getMember().getName(), user1.getMember().getName(), user2.getMember().getName(), owner.getAddress());
                     while (!tempQueue.isEmpty()) {
                         queue.add(tempQueue.poll());
                     }
+
                     return new CreateMatchingResponse(request.getMemberId());
                 }
             }
@@ -103,9 +109,14 @@ public class MatchingController {
                 log.info("Found Group");
                 root = kdTreeService.deleteNode(root, best1.getAxes());
                 log.info("Delete TrashOwner from KDTree");
+
                 Matching owner = matchingRepository.findByMemberId(best1.getUId()).get();
+                Matching user0 = matchingRepository.findByMemberId(result.get(0).getUId()).get();
+                Matching user2 = matchingRepository.findByMemberId(result.get(1).getUId()).get();
+
                 matchedService.matched(best1.getUId(), result.get(0).getUId(), result.get(1).getUId(), owner.getAddress());
-                chatRoomService.createChatRoom(best1.getUId().toString(), result.get(0).getUId().toString(), result.get(1).getUId().toString());
+                chatRoomService.createChatRoom(best1.getUId().toString(), result.get(0).getUId().toString(), result.get(1).getUId().toString(),
+                        owner.getMember().getName(), user0.getMember().getName(), user2.getMember().getName(), owner.getAddress());
                 while (!tempQueue.isEmpty()) {
                     queue.add(tempQueue.poll());
                 }
