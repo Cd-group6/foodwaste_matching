@@ -42,6 +42,12 @@ public class ChatRoomController {
         return cs.createChatRoom(member1, member2, member3);
     }
 
+    @PostMapping("/recall")
+    public List<ChatMessageEntity> recallmessage(@RequestParam String roomId) {
+        List<ChatMessageEntity> recallm = chatMessageRepository.findAllByRoomId(roomId);
+        return recallm;
+    }
+
     @PostMapping("/checkmatched")
     public List<ChatRoomEntity> testMatched(@RequestParam String myName) {
         List<ChatRoomEntity> resultMatched = null;
