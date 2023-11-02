@@ -1,5 +1,6 @@
 package foodwasting.server.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.lang.Long;
@@ -8,6 +9,7 @@ import java.util.PriorityQueue;
 import java.util.ArrayList;
 
 @Service
+@Slf4j
 public final class KDTreeService {
     static final Integer k = 2; // 2 dimensional
     // depth = 0
@@ -85,8 +87,17 @@ public final class KDTreeService {
         return min;
     }
 
-    private NodeService deleteNode(NodeService root, Double[] axes) {
+    public NodeService deleteNode(NodeService root, Double[] axes) {
         return deleteNodeRec(root, axes, 0l);
+    }
+
+    private void copyNode(NodeService root, NodeService min){
+        root.d = min.d;
+        root.axes = min.axes;
+        root.idx = min.idx;
+        root.group = min.group;
+        root.state = min.state;
+        root.uId = min.uId;
     }
 
     private NodeService deleteNodeRec(NodeService root, Double[] axes, Long depth) {
@@ -99,11 +110,11 @@ public final class KDTreeService {
         if (areaxesSame(root.axes, axes)) {
             if (root.right != null) { // find min in right sub tree
                 NodeService min = findMin(root.right, cd);
-                root = min;
+                copyNode(root, min);
                 root.right = deleteNodeRec(root.right, min.axes, depth + 1);
             } else if (root.left != null) { // find min in left sub tree
                 NodeService min = findMin(root.left, cd);
-                root = min;
+                copyNode(root, min);
                 root.right = deleteNodeRec(root.left, min.axes, depth + 1);
             } else { // just delete it
                 root = null;
@@ -128,10 +139,6 @@ public final class KDTreeService {
         lat2 = Math.toRadians(lat2);
         lon2 = Math.toRadians(lon2);
 
-        System.out.println("l1 : " + lat1);
-        System.out.println("l1 : " + lat2);
-        System.out.println("l1 : " + lon1);
-        System.out.println("l1 : " + lon2);
         // Haversine 공식 계산
         double dlat = lat2 - lat1;
         double dlon = lon2 - lon1;
@@ -226,14 +233,16 @@ public final class KDTreeService {
     }
 
     public ArrayList<UsrNodeService> findGroup(NodeService root, NodeService best, UsrNodeService s) {
-        if (best.d > 200) {
-
+        if (root == null || best == null) {
+            return null;
         }
-        if ((best != null) && (best.state <= 2)) {
+        if (best.d > 200) {
+            return null;
+        }
+        if (best.state <= 2){
             best.state++;
             best.group.add(s);
             if (best.state == 2) {
-                deleteNode(root, best.axes);
                 return best.group;
             }
 

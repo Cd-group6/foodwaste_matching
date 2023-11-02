@@ -10,15 +10,20 @@ import org.springframework.stereotype.Service;
 @Getter
 
 public class UsrNodeService {
-    Long uId;
+    Long uId, timeStamp;
     Double[] axes;
 
 
+    public Long getTimestamp(){
+        return this.timeStamp;
+    }
+
     protected UsrNodeService(){
     }
-    public UsrNodeService(Long uId, Double[] arr) {
+    public UsrNodeService(Long uId, Double[] arr, Long timeStamp) {
         this.uId = uId;
         this.axes = arr;
+        this.timeStamp = timeStamp;
     }
 
 
