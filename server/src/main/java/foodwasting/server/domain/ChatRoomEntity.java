@@ -44,6 +44,9 @@ public class ChatRoomEntity {
     @Column
     private String adress;
 
+    @Column
+    private Integer deposit;
+
     /*
     @OneToMany(mappedBy = "chatRoomEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessageEntity> chatMessageEntityList = new ArrayList<>();

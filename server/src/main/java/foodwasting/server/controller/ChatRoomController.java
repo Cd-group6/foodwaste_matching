@@ -6,6 +6,7 @@ import foodwasting.server.dto.ChatRoomDTO;
 import foodwasting.server.repository.ChatMessageRepository;
 import foodwasting.server.repository.ChatRoomRepository;
 import foodwasting.server.service.ChatRoomService;
+import foodwasting.server.service.DepositService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ public class ChatRoomController {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomService cs;
+    private final DepositService depositService;
 
     @PostMapping("/roomtest")
     public ChatRoomDTO testMatch(@RequestParam String member1, @RequestParam String member2, @RequestParam String member3,@RequestParam String member1Name, @RequestParam String member2Name, @RequestParam String member3Name, @RequestParam String adress){
@@ -91,4 +93,9 @@ public class ChatRoomController {
         return chatMessageRepository.findAllByRoomId(roomId);
     }
 
+    @PostMapping("/cutdeposit")
+    @ResponseBody
+    public Integer cutdeposit(@RequestParam String roomId) {
+        return depositService.roomDeposit(roomId);
+    }
 }
