@@ -3,11 +3,13 @@ package foodwasting.server.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foodwasting.server.domain.ChatMessageEntity;
 import foodwasting.server.domain.ChatRoomEntity;
+import foodwasting.server.domain.Member;
 import foodwasting.server.domain.MessageType;
 import foodwasting.server.dto.ChatRoomDTO;
 import foodwasting.server.dto.MessageDTO;
 import foodwasting.server.repository.ChatMessageRepository;
 import foodwasting.server.repository.ChatRoomRepository;
+import foodwasting.server.repository.MemberRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,9 @@ public class ChatRoomService {
     private Map<String, ChatRoomDTO> chatRoomDTOMap;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final MemberRepository memberRepository;
+
+    private final DepositService depositService;
 
     private final ObjectMapper objectMapper;
     private Map<String, ChatRoomDTO> chatRooms;
@@ -42,6 +47,12 @@ public class ChatRoomService {
 
         String name = member1 + "님의 방";
 
+        //서창호가 우용이 노트북으로 추가
+        Member memberf = memberRepository.findById(Long.parseLong(member1)).get();
+        memberf.setDeposit(memberf.getDeposit() - 900);
+        Member members = memberRepository.findById(Long.parseLong(member2)).get();
+        members.setDeposit(members.getDeposit() - 900);
+
         ChatRoomDTO room = ChatRoomDTO.builder()
                 .roomId(randomRoomId)
                 .roomName(name)
@@ -52,6 +63,7 @@ public class ChatRoomService {
                 .member2Name(member2Name)
                 .member3Name(member3Name)
                 .adress(adress)
+                .deposit(1800)
                 .build();
         chatRooms.put(room.getRoomId(), room);
 
