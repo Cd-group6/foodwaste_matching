@@ -18,11 +18,7 @@ import {theme} from "../colors.js";
 import Search from '../components/SearchBar';
 
 const Home = ({navigation}) => {
-    const [boxes, setBoxes] = useState([]);
-    const addBox = () => {
-      const newBox = <View key={boxes.length} style={styles.box1}></View>;
-      setBoxes([...boxes, newBox]);
-    };
+
 
     //const ws = useRef(null);
     //ws.current = new WebSocket('ws://10.0.2.2:8080/ws/chat');
@@ -131,17 +127,7 @@ const Home = ({navigation}) => {
                     </TouchableOpacity>
                 </View>*/}
 
-                <View style={styles.container1}>
-                  <TouchableOpacity onPress={addBox}>
-                    <Text style={styles.button1}>생성하기</Text>
-                  </TouchableOpacity>
 
-                  {boxes.map((box, index) => (
-                    <View key={index} style={styles.boxContainer1}>
-                      {box}
-                    </View>
-                  ))}
-                </View>
 
                 <View style={styles.chat}></View>
             </ScrollView>

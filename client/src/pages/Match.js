@@ -60,7 +60,7 @@ const Match = ({navigation}) => {
                 console.log({aa});
                 if(aa){
                    axios.post("http://34.64.146.16:8080/chatRoom/checkmatched?myName="+id).then(response => {
-                        AsyncStorage.setItem('roomId',JSON.stringify(response.data[0].roomId));
+                        AsyncStorage.setItem('roomId',JSON.stringify(response.data[0].roomId)); // .adress
                         setRoomId(JSON.stringify(response.data[0].roomId));
                         console.log(JSON.stringify(response.data[0].roomId));
                         if(response.data[0]){
@@ -272,12 +272,12 @@ const styles = StyleSheet.create({
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: theme.mainC,
-            marginTop: wp(16),
+            marginTop: wp(1),
        },
        activityIndicator: {
          alignItems: 'center',
          height: 80,
-         marginTop:10,
+         marginTop:5,
        },
 });
 export  default Match
