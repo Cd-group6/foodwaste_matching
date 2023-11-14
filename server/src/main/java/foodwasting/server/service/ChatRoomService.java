@@ -12,6 +12,7 @@ import foodwasting.server.repository.ChatRoomRepository;
 import foodwasting.server.repository.MemberRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -20,6 +21,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChatRoomService {
     private Map<String, ChatRoomDTO> chatRoomDTOMap;
     private final ChatRoomRepository chatRoomRepository;
@@ -52,7 +54,7 @@ public class ChatRoomService {
         memberf.setDeposit(memberf.getDeposit() - 900);
         Member members = memberRepository.findById(Long.parseLong(member2)).get();
         members.setDeposit(members.getDeposit() - 900);
-
+        Integer setdeposit = 1800;
         ChatRoomDTO room = ChatRoomDTO.builder()
                 .roomId(randomRoomId)
                 .roomName(name)
@@ -63,8 +65,8 @@ public class ChatRoomService {
                 .member2Name(member2Name)
                 .member3Name(member3Name)
                 .adress(adress)
-                .deposit(1800)
                 .build();
+        room.setDeposit(1800);
         chatRooms.put(room.getRoomId(), room);
 
         // DB save
